@@ -1,0 +1,367 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>POS Super Admin</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<style>
+  :root { --bg: #f8fafc; --fg: #0f172a; color-scheme: light; }
+  body { background: var(--bg); color: var(--fg); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Noto Sans Myanmar", "Padauk", sans-serif; font-size: 16px; line-height: 1.5; }
+  button, input, select { font: inherit; }
+  :focus-visible { outline: 2px solid #4f46e5; outline-offset: 2px; }
+  .gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .demo-bar { background: #fef3c7; color: #92400e; font-size: 12px; text-align: center; padding: 4px 8px; }
+</style>
+
+<div class="demo-bar">Preview mode · နမူနာ data သာ သုံးထားသည် (Supabase မချိတ်ပါ)</div>
+<div id="app"></div>
+<div id="overlay"></div>
+
+<script>
+const DAY = 86400000;
+const iso = (n) => new Date(Date.now() + n * DAY).toISOString();
+const S = {
+  authed: false, route: "dashboard", status: "all", q: "", modal: null, toast: "",
+  shops: [
+    { id: "1", name: "ရွှေဝါ စူပါမားကတ်", owner_name: "ဦးအောင်မြင့်", phone: "09 421 556 780", status: "active", expires_at: iso(21), monthly_fee: 30000, created_at: iso(-120) },
+    { id: "2", name: "မြတ်ငြိမ်း ဆေးဆိုင်", owner_name: "ဒေါ်ခင်မာလာ", phone: "09 795 120 334", status: "active", expires_at: iso(3), monthly_fee: 25000, created_at: iso(-90) },
+    { id: "3", name: "ကိုကိုလေး ကော်ဖီဆိုင်", owner_name: "ကိုကိုလေး", phone: "09 250 887 021", status: "trial", expires_at: iso(9), monthly_fee: 30000, created_at: iso(-5) },
+    { id: "4", name: "ပန်းနု အလှကုန်ဆိုင်", owner_name: "မနုနု", phone: "09 440 912 665", status: "trial", expires_at: iso(2), monthly_fee: 20000, created_at: iso(-12) },
+    { id: "5", name: "ရတနာ ဘောလုံးဈေး", owner_name: "ဦးသန်းထွဋ်", phone: "09 511 300 478", status: "suspended", expires_at: iso(14), monthly_fee: 30000, created_at: iso(-200) },
+    { id: "6", name: "အေးမြ စာအုပ်ဆိုင်", owner_name: "ဒေါ်အေးမြ", phone: "09 780 456 219", status: "active", expires_at: iso(-4), monthly_fee: 15000, created_at: iso(-300) },
+    { id: "7", name: "ရန်ကုန် ဖုန်းဆိုင်", owner_name: "ကိုဇေယျာ", phone: "09 962 117 305", status: "pending", expires_at: null, monthly_fee: 30000, created_at: iso(-1) },
+    { id: "8", name: "သီရိ မုန့်တိုက်", owner_name: "မသီရိ", phone: "09 255 604 891", status: "pending", expires_at: null, monthly_fee: 30000, created_at: iso(-2) },
+    { id: "9", name: "နေဝင်း ဟာ့ဒ်ဝဲ", owner_name: "ဦးနေဝင်း", phone: "09 401 778 530", status: "rejected", expires_at: null, monthly_fee: 30000, created_at: iso(-40) },
+  ],
+  staff: {
+    "1": [
+      { id: "u1", name: "မမြ", phone: "09 111 222 333", role: "cashier", banned: false, last_login: iso(-0.1) },
+      { id: "u2", name: "ကိုထွန်း", phone: "09 444 555 666", role: "cashier", banned: false, last_login: iso(-1) },
+      { id: "u3", name: "မစန္ဒာ", phone: null, role: "manager", banned: true, last_login: iso(-30) },
+    ],
+    "2": [{ id: "u4", name: "မဝါဝါ", phone: "09 777 888 999", role: "cashier", banned: false, last_login: null }],
+  },
+  pays: {
+    "1": [{ id: "p1", paid_at: iso(-9), months: 1, amount: 30000 }, { id: "p2", paid_at: iso(-39), months: 3, amount: 90000 }],
+    "2": [{ id: "p3", paid_at: iso(-27), months: 1, amount: 25000 }],
+    "6": [{ id: "p4", paid_at: iso(-34), months: 2, amount: 30000 }],
+  },
+};
+
+/* ---------- Supabase config (ဒီနှစ်ခုကို ဖြည့်ပါ) ---------- */
+const SUPABASE_URL = "https://ngdpngcdkowozbfqgpuv.supabase.co";       // ဥပမာ https://abcdxyz.supabase.co
+const SUPABASE_ANON_KEY = "sb_publishable_LJLquuIMRJTiUee_1KN1xQ_06ShRrD6";  // Project Settings > API > anon public key (service_role မထည့်ရ)
+const sb = (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+if (sb) { S.shops = []; S.staff = {}; S.pays = {}; document.querySelector(".demo-bar").remove(); }
+
+const icons = {
+  dashboard: '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',
+  inbox: '<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/>',
+  store: '<path d="M3 9l1.5-5h15L21 9"/><path d="M3 9h18"/><path d="M4 9v11h16V9"/><path d="M9 20v-6h6v6"/>',
+  list: '<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',
+  clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+  flask: '<path d="M9 3h6"/><path d="M10 3v6L4.5 19a1.5 1.5 0 0 0 1.3 2h12.4a1.5 1.5 0 0 0 1.3-2L14 9V3"/><path d="M7.5 14h9"/>',
+  check: '<circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/>',
+  hourglass: '<path d="M5 22h14"/><path d="M5 2h14"/><path d="M17 22v-4.172a2 2 0 0 0-.586-1.414L12 12l-4.414 4.414A2 2 0 0 0 7 17.828V22"/><path d="M7 2v4.172a2 2 0 0 0 .586 1.414L12 12l4.414-4.414A2 2 0 0 0 17 6.172V2"/>',
+  ban: '<circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/>',
+  logout: '<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>',
+  search: '<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  user: '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  lock: '<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  unlock: '<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',
+  back: '<path d="m15 18-6-6 6-6"/>',
+  phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
+};
+const ic = (n, c = "w-4 h-4") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 ${c}" aria-hidden="true">${icons[n]}</svg>`;
+
+const daysLeft = (v) => v ? Math.ceil((new Date(v).getTime() - Date.now()) / DAY) : null;
+const isLive = (s) => s.status === "active" || s.status === "trial";
+const isExpired = (s) => isLive(s) && s.expires_at != null && daysLeft(s.expires_at) < 0;
+const isSoon = (s) => { const d = daysLeft(s.expires_at); return isLive(s) && d !== null && d >= 0 && d <= 5; };
+const isDead = (s) => s.status === "suspended" || isExpired(s);
+const fmt = (n) => new Intl.NumberFormat("en-US").format(n) + " ကျပ်";
+const date = (v) => new Date(v).toLocaleDateString();
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+const badgeMap = {
+  pending: ["စောင့်ဆိုင်း", "bg-amber-100 text-amber-800"], trial: ["Trial", "bg-sky-100 text-sky-800"],
+  active: ["Active", "bg-emerald-100 text-emerald-800"], suspended: ["ပိတ်သိမ်း", "bg-red-100 text-red-800"],
+  rejected: ["ပယ်ချ", "bg-slate-200 text-slate-700"], expired: ["သက်တမ်းကုန်", "bg-rose-100 text-rose-800"],
+};
+const badge = (s) => { const [l, c] = badgeMap[isExpired(s) ? "expired" : s.status]; return `<span class="text-xs px-2 py-0.5 rounded-full font-medium ${c}">${l}</span>`; };
+
+const tabs = [
+  ["all", "အားလုံး", "list", () => true], ["pending", "စောင့်ဆိုင်း", "clock", (s) => s.status === "pending"],
+  ["trial", "Trial", "flask", (s) => s.status === "trial" && !isExpired(s)], ["active", "Active", "check", (s) => s.status === "active" && !isExpired(s)],
+  ["soon", "ကုန်ခါနီး", "hourglass", isSoon], ["dead", "ပိတ်သိမ်း/ကုန်", "ban", isDead],
+];
+const nav = [["dashboard", "Dashboard", "dashboard"], ["pending", "လျှောက်လွှာ", "inbox"], ["shops", "ဆိုင်များ", "store"]];
+
+const cls = { inp: "w-full border rounded-lg px-3 py-2 mt-1 bg-white", card: "bg-white rounded-xl shadow-sm p-4" };
+
+/* ---------- views ---------- */
+function loginView() {
+  return `<main class="min-h-[70vh] grid place-items-center p-4 gutter"><form data-form="login" class="w-full max-w-sm bg-white rounded-2xl shadow p-6 space-y-4">
+    <h1 class="text-xl font-bold">Super Admin Login</h1>
+    <input class="w-full border rounded-lg px-3 py-2" type="email" id="email" placeholder="Email" ${sb ? "" : 'value="demo@example.com"'} required>
+    <input class="w-full border rounded-lg px-3 py-2" type="password" id="pw" placeholder="Password" ${sb ? "" : 'value="demo1234"'} required>
+    ${sb ? "" : `<p class="text-xs text-slate-500">Preview mode - ဘာ email/password မဆို ဝင်နိုင်သည်</p>`}
+    <button class="w-full bg-indigo-600 text-white rounded-lg py-2 font-medium">ဝင်မည်</button></form></main>`;
+}
+
+function shell(body) {
+  const pend = S.shops.filter((s) => s.status === "pending").length;
+  const on = (h) => S.route === h || (h === "shops" && S.route.startsWith("shop-"));
+  const b = pend > 0 ? `<span class="min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-white text-[11px] leading-[18px] text-center font-semibold">${pend}</span>` : "";
+  const top = nav.map(([h, l, i]) => `<a href="#${h}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${on(h) ? "bg-indigo-50 text-indigo-700" : "text-slate-600 hover:bg-slate-100"}">${ic(i)}${l}${h === "pending" ? b : ""}</a>`).join("");
+  const bot = nav.map(([h, l, i]) => `<a href="#${h}" class="relative flex flex-col items-center gap-0.5 pt-2 pb-1.5 text-[11px] font-medium ${on(h) ? "text-indigo-600" : "text-slate-500"}"><span class="relative">${ic(i, "w-6 h-6")}${h === "pending" && pend > 0 ? `<span class="absolute -top-1.5 -right-2.5 min-w-[16px] h-4 px-1 rounded-full bg-amber-500 text-white text-[10px] leading-4 text-center font-semibold">${pend}</span>` : ""}</span>${l}</a>`).join("");
+  return `<div class="min-h-screen"><header class="bg-white border-b sticky top-0 z-10"><div class="max-w-6xl mx-auto gutter h-14 flex items-center gap-4">
+    <b class="text-indigo-600 whitespace-nowrap">POS Super Admin</b><nav class="hidden sm:flex gap-1 flex-1">${top}</nav><span class="flex-1 sm:hidden"></span>
+    <span class="hidden md:block text-xs text-slate-500">${esc(S.email || "admin@example.com")}</span>
+    <button data-act="logout" aria-label="ထွက်မည်" class="flex items-center gap-1.5 text-sm text-slate-600 hover:text-red-600 p-2 rounded-lg hover:bg-slate-100">${ic("logout")}<span class="hidden sm:inline">ထွက်မည်</span></button></div></header>
+    <main class="max-w-6xl mx-auto gutter py-4 pb-28 sm:pb-4">${body}</main>
+    <nav class="sm:hidden fixed bottom-0 inset-x-0 z-10 bg-white border-t grid grid-cols-3 pb-[env(safe-area-inset-bottom)]">${bot}</nav></div>`;
+}
+
+function dashboardView() {
+  const all = S.shops, pays = Object.values(S.pays).flat();
+  const soon = all.filter(isSoon);
+  const total = pays.reduce((a, p) => a + p.amount, 0);
+  const month = new Date().toISOString().slice(0, 7);
+  const thisMonth = pays.filter((p) => p.paid_at.startsWith(month)).reduce((a, p) => a + p.amount, 0);
+  const cards = [
+    ["ဆိုင်စုစုပေါင်း", all.length, "text-slate-900", "all"], ["Approve စောင့်နေ", all.filter((s) => s.status === "pending").length, "text-amber-600", "pending"],
+    ["အသုံးပြုနေဆဲ", all.filter((s) => isLive(s) && !isExpired(s)).length, "text-emerald-600", "running"],
+    ["သက်တမ်းကုန်ခါနီး (≤၅ ရက်)", soon.length, "text-orange-600", "soon"], ["ပိတ်သိမ်း / သက်တမ်းကုန်", all.filter(isDead).length, "text-red-600", "dead"],
+    ["ကောက်ခံရရှိမှု စုစုပေါင်း", fmt(total), "text-indigo-600", "all"],
+  ];
+  return `<div class="space-y-6"><h1 class="text-xl font-bold">Dashboard</h1>
+  <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">${cards.map(([l, v, c, st]) => `<a href="#shops" data-act="go-status" data-v="${st}" class="bg-white rounded-xl p-4 shadow-sm hover:shadow"><p class="text-xs text-slate-500">${l}</p><p class="text-2xl font-bold mt-1 ${c}">${v}</p></a>`).join("")}</div>
+  <p class="text-sm text-slate-500">ယခုလ ရရှိငွေ - <b>${fmt(thisMonth)}</b></p>
+  <section class="bg-white rounded-xl shadow-sm p-4"><h2 class="font-semibold mb-3">သက်တမ်းကုန်ခါနီး ဆိုင်များ</h2>
+  ${soon.length ? "" : '<p class="text-sm text-slate-500">မရှိပါ</p>'}<ul class="divide-y">${[...soon].sort((a, b) => daysLeft(a.expires_at) - daysLeft(b.expires_at)).map((s) => `<li><a href="#shop-${s.id}" class="flex justify-between py-2 text-sm"><span>${esc(s.name)}</span><span class="text-orange-600 font-medium">${daysLeft(s.expires_at)} ရက်လို</span></a></li>`).join("")}</ul></section></div>`;
+}
+
+function shopsView() {
+  const q = S.q.toLowerCase();
+  const searched = S.shops.filter((s) => !q || `${s.name} ${s.owner_name} ${s.phone}`.toLowerCase().includes(q));
+  const counts = Object.fromEntries(tabs.map(([k, , , f]) => [k, searched.filter(f).length]));
+  const f = S.status === "running" ? (s) => isLive(s) && !isExpired(s) : (tabs.find(([k]) => k === S.status) || [])[3] || ((s) => s.status === S.status);
+  const shops = searched.filter(f).sort((a, b) => b.created_at.localeCompare(a.created_at));
+  return `<div class="space-y-4"><div class="flex items-center justify-between"><h1 class="text-xl font-bold">ဆိုင်များ (${shops.length})</h1>
+  <button data-act="open-create" class="bg-indigo-600 text-white text-sm rounded-lg px-3 py-2">+ ဆိုင်အသစ်</button></div>
+  <form data-form="search" class="flex gap-2"><div class="relative flex-1">${ic("search", "w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400")}
+  <input id="q" value="${esc(S.q)}" placeholder="ဆိုင်အမည် / ပိုင်ရှင် / ဖုန်း ရှာရန်" class="w-full border rounded-lg pl-9 pr-3 py-2 bg-white"></div>
+  <button class="px-4 bg-indigo-600 text-white rounded-lg text-sm font-medium">ရှာ</button></form>
+  <div class="flex gap-2 overflow-x-auto pb-1 text-sm">${tabs.map(([k, l, i]) => { const on = S.status === k; return `<button data-act="tab" data-v="${k}" class="flex items-center gap-1.5 pl-2.5 pr-3 py-1.5 rounded-full whitespace-nowrap border font-medium transition-colors ${on ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-slate-700 hover:bg-slate-50"}">${ic(i)}${l}<span class="text-xs ${on ? "text-indigo-100" : "text-slate-400"}">${counts[k]}</span></button>`; }).join("")}</div>
+  <div class="space-y-2">${shops.map((s) => { const d = daysLeft(s.expires_at); return `<a href="#shop-${s.id}" class="block bg-white rounded-xl shadow-sm p-3 hover:shadow"><div class="flex justify-between items-start gap-2"><div class="min-w-0"><p class="font-medium">${esc(s.name)}</p><p class="text-xs text-slate-500 flex items-center gap-1 mt-0.5">${ic("phone", "w-3 h-3")}${esc(s.owner_name)} · ${esc(s.phone)}</p></div>${badge(s)}</div>
+  <p class="text-xs text-slate-500 mt-2">${fmt(s.monthly_fee)}/လ · ${s.expires_at ? `${date(s.expires_at)} (${d >= 0 ? d + " ရက်လို" : "ကုန်ပြီ"})` : "သက်တမ်းမသတ်မှတ်"}</p></a>`; }).join("")}
+  ${shops.length ? "" : '<p class="text-slate-500 text-sm py-6 text-center">မတွေ့ပါ</p>'}</div></div>`;
+}
+
+function pendingView() {
+  const list = S.shops.filter((s) => s.status === "pending");
+  return `<div class="space-y-4"><h1 class="text-xl font-bold">လျှောက်ထားမှုများ (${list.length})</h1>
+  ${list.length ? `<div class="space-y-3">${list.map((s) => `<div class="bg-white rounded-xl shadow-sm p-4"><p class="font-semibold">${esc(s.name)}</p><p class="text-sm text-slate-600">${esc(s.owner_name)} · ${esc(s.phone)}</p><p class="text-xs text-slate-400">လျှောက်ထားသည့်ရက် - ${date(s.created_at)}</p>
+  <div class="flex gap-2 mt-3"><button data-act="open-approve" data-id="${s.id}" class="flex-1 bg-emerald-600 text-white rounded-lg py-2 text-sm">Approve</button><button data-act="reject" data-id="${s.id}" class="flex-1 bg-white border border-red-300 text-red-600 rounded-lg py-2 text-sm">Reject</button></div></div>`).join("")}</div>` : '<p class="text-slate-500">စောင့်ဆိုင်းနေသော လျှောက်လွှာ မရှိပါ</p>'}</div>`;
+}
+
+function detailView(id) {
+  const s = S.shops.find((x) => x.id === id);
+  if (!s) return `<p class="py-10 text-center text-slate-500">ဆိုင် မတွေ့ပါ</p>`;
+  const d = daysLeft(s.expires_at), staff = S.staff[id] || [], pays = [...(S.pays[id] || [])].sort((a, b) => b.paid_at.localeCompare(a.paid_at));
+  const act = staff.filter((m) => !m.banned).length;
+  const st = S.form || { months: 1, amount: s.monthly_fee, fee: s.monthly_fee };
+  const btn = "rounded-lg py-2 text-sm";
+  return `<div class="space-y-4 max-w-xl"><a href="#shops" class="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800">${ic("back")}ဆိုင်များ</a>
+  <div class="${cls.card}"><div class="flex justify-between gap-2"><h1 class="text-xl font-bold">${esc(s.name)}</h1>${badge(s)}</div><p class="text-sm text-slate-600 mt-1">${esc(s.owner_name)} · ${esc(s.phone)}</p>
+  <p class="text-sm mt-2">လစဉ်ကြေး - <b>${fmt(s.monthly_fee)}</b></p><p class="text-sm">သက်တမ်း - ${s.expires_at ? `<b>${date(s.expires_at)} (${d >= 0 ? d + " ရက်လို" : "ကုန်ပြီ"})</b>` : "မသတ်မှတ်"}</p></div>
+
+  <section class="${cls.card}"><div class="flex items-center justify-between mb-3"><h2 class="font-semibold flex items-center gap-2">${ic("users", "w-5 h-5 text-slate-500")}Cashier အကောင့်များ</h2><span class="text-xs text-slate-500">သုံးနေ ${act} · ပိတ်ထား ${staff.length - act}</span></div>
+  ${staff.length ? "" : '<p class="text-sm text-slate-500">Cashier အကောင့် မရှိသေးပါ</p>'}<ul class="divide-y">${staff.map((m) => `<li class="py-3 flex items-center gap-3">
+  <span class="w-9 h-9 rounded-full grid place-items-center ${m.banned ? "bg-red-50 text-red-500" : "bg-indigo-50 text-indigo-600"}">${ic("user", "w-5 h-5")}</span>
+  <div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${esc(m.name)} <span class="ml-1 text-[11px] font-normal px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">${m.role}</span></p>
+  <p class="text-xs text-slate-500 truncate">${m.phone ? m.phone + " · " : ""}${m.last_login ? "နောက်ဆုံးဝင် " + new Date(m.last_login).toLocaleString() : "မဝင်ဖူးသေး"}</p>
+  <span class="inline-block mt-1 text-[11px] px-2 py-0.5 rounded-full font-medium ${m.banned ? "bg-red-100 text-red-800" : "bg-emerald-100 text-emerald-800"}">${m.banned ? "ပိတ်ထား" : "သုံးနေ"}</span></div>
+  <button data-act="staff" data-id="${m.id}" class="flex items-center gap-1.5 text-sm rounded-lg px-3 py-1.5 border ${m.banned ? "border-indigo-300 text-indigo-700" : "border-red-300 text-red-600"}">${ic(m.banned ? "unlock" : "lock")}${m.banned ? "ပြန်ဖွင့်" : "ပိတ်မည်"}</button></li>`).join("")}</ul></section>
+
+  <section class="${cls.card} space-y-4"><h2 class="font-semibold">Quick Controls</h2>
+  <div class="space-y-2"><p class="text-sm text-slate-600">ကြေးကောက်ခံပြီး သက်တမ်းတိုး</p><div class="flex gap-2"><input id="months" type="number" min="1" value="${st.months}" class="w-20 border rounded-lg px-2 py-2 bg-white"><span class="self-center text-sm">လ</span><input id="amount" type="number" value="${st.amount}" class="flex-1 min-w-0 border rounded-lg px-2 py-2 bg-white"></div>
+  <button data-act="renew" class="${btn} w-full bg-emerald-600 text-white" id="renewBtn">ငွေလက်ခံ + ${st.months} လ တိုးမည်</button></div>
+  <div class="grid grid-cols-3 gap-2">${[7, 15, 30].map((n) => `<button data-act="extend" data-v="${n}" class="${btn} border">+${n} ရက် (အခမဲ့)</button>`).join("")}</div>
+  <div class="flex gap-2"><input id="fee" type="number" value="${st.fee}" class="flex-1 min-w-0 border rounded-lg px-2 py-2 bg-white"><button data-act="setfee" class="${btn} px-3 border">ကြေးနှုန်းပြောင်း</button></div>
+  ${s.status === "suspended" ? `<button data-act="reactivate" class="${btn} w-full bg-indigo-600 text-white">ပြန်ဖွင့်မည်</button>` : `<button data-act="suspend" class="${btn} w-full bg-red-600 text-white">ပိတ်သိမ်းမည်</button>`}</section>
+
+  <section class="${cls.card}"><h2 class="font-semibold mb-2">ကြေးပေးသွင်းမှတ်တမ်း</h2>${pays.length ? "" : '<p class="text-sm text-slate-500">မရှိသေးပါ</p>'}
+  <ul class="divide-y text-sm">${pays.map((p) => `<li class="py-2 flex justify-between"><span>${date(p.paid_at)} · ${p.months} လ</span><b>${fmt(p.amount)}</b></li>`).join("")}</ul></section></div>`;
+}
+
+/* ---------- modals ---------- */
+function modalHtml() {
+  const m = S.modal; if (!m) return "";
+  const wrap = (inner) => `<div data-act="close" class="fixed inset-0 bg-black/40 grid place-items-end sm:place-items-center z-20" data-backdrop><div class="bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-5 space-y-3 max-h-[90vh] overflow-y-auto pb-[max(20px,env(safe-area-inset-bottom))]">${inner}</div></div>`;
+  if (m.type === "confirm") return wrap(`<p class="font-medium whitespace-pre-line">${esc(m.text)}</p><div class="flex gap-2"><button data-act="close" class="flex-1 border rounded-lg py-2">မလုပ်တော့</button><button data-act="confirm-yes" class="flex-1 bg-red-600 text-white rounded-lg py-2">အတည်ပြုမည်</button></div>`);
+  if (m.type === "approve") {
+    const s = S.shops.find((x) => x.id === m.id);
+    return wrap(`<h2 class="font-bold">Approve - ${esc(s.name)}</h2>
+    <label class="block text-sm">Initial Status<select id="ap-status" class="${cls.inp}"><option value="trial" ${m.status === "trial" ? "selected" : ""}>Trial</option><option value="active" ${m.status === "active" ? "selected" : ""}>Active</option></select></label>
+    <div class="flex gap-2 text-sm"><button data-act="ap-mode" data-v="days" class="flex-1 py-1.5 rounded-lg border ${m.mode === "days" ? "bg-indigo-600 text-white" : ""}">ရက်အရေအတွက်</button><button data-act="ap-mode" data-v="date" class="flex-1 py-1.5 rounded-lg border ${m.mode === "date" ? "bg-indigo-600 text-white" : ""}">ကုန်မည့်ရက်</button></div>
+    ${m.mode === "days" ? `<div><input id="ap-days" type="number" min="1" class="w-full border rounded-lg px-3 py-2" value="${m.days}"><div class="flex gap-2 mt-2 text-xs">${[7, 14, 30, 90, 365].map((d) => `<button data-act="ap-days" data-v="${d}" class="px-2 py-1 bg-slate-100 rounded">${d}ရက်</button>`).join("")}</div></div>` : `<input id="ap-date" type="date" class="w-full border rounded-lg px-3 py-2" value="${m.date}">`}
+    <label class="block text-sm">လစဉ်ကြေး (ကျပ်)<input id="ap-fee" type="number" class="${cls.inp}" value="${m.fee}"></label>
+    ${m.status === "active" ? `<label class="flex items-center gap-2 text-sm"><input id="ap-paid" type="checkbox" ${m.paid ? "checked" : ""}> ပထမလစဉ်ကြေး ရရှိပြီး (မှတ်တမ်းတင်မည်)</label>` : ""}
+    <div class="flex gap-2"><button data-act="close" class="flex-1 border rounded-lg py-2">မလုပ်တော့</button><button data-act="approve" class="flex-1 bg-emerald-600 text-white rounded-lg py-2">ဖွင့်ပေးမည်</button></div>`);
+  }
+  if (m.type === "create") return `<div data-act="close" class="fixed inset-0 bg-black/40 grid place-items-end sm:place-items-center z-20" data-backdrop><form data-form="create" class="bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-5 space-y-2 max-h-[90vh] overflow-y-auto pb-[max(20px,env(safe-area-inset-bottom))]"><h2 class="font-bold">ဆိုင်အသစ် ဖန်တီးမည်</h2>
+    <label class="block text-sm">ဆိုင်အမည်<input id="c-name" required class="${cls.inp}"></label><label class="block text-sm">ပိုင်ရှင်အမည်<input id="c-owner" required class="${cls.inp}"></label>
+    <label class="block text-sm">ဖုန်း<input id="c-phone" required class="${cls.inp}"></label><p class="text-xs text-slate-500 self-end pb-2">Owner ဖုန်းနံပါတ် + Password ဖြင့် POS တွင် ဝင်ရမည်</p>
+    <label class="block text-sm">Password (အနည်းဆုံး ၆ လုံး)<input id="c-pw" required minlength="6" class="${cls.inp}"></label>
+    <div class="grid grid-cols-3 gap-2"><label class="block text-sm">Status<select id="c-status" class="${cls.inp}"><option value="trial">Trial</option><option value="active">Active</option></select></label>
+    <label class="block text-sm">ရက်<input id="c-days" type="number" min="1" value="14" class="${cls.inp}"></label><label class="block text-sm">လစဉ်ကြေး<input id="c-fee" type="number" value="30000" class="${cls.inp}"></label></div>
+    <div class="flex gap-2 pt-2"><button type="button" data-act="close" class="flex-1 border rounded-lg py-2">ပိတ်</button><button class="flex-1 bg-indigo-600 text-white rounded-lg py-2">ဖန်တီးမည်</button></div></form></div>`;
+  return "";
+}
+
+/* ---------- render ---------- */
+function render() {
+  const app = document.getElementById("app");
+  if (!S.authed) app.innerHTML = loginView();
+  else {
+    const r = S.route;
+    const body = r === "dashboard" ? dashboardView() : r === "pending" ? pendingView() : r === "shops" ? shopsView() : r.startsWith("shop-") ? detailView(r.slice(5)) : dashboardView();
+    app.innerHTML = shell(body);
+  }
+  document.getElementById("overlay").innerHTML = modalHtml() + (S.toast ? `<div class="fixed left-1/2 -translate-x-1/2 bottom-24 sm:bottom-6 z-30 bg-slate-900 text-white text-sm rounded-lg px-4 py-2 shadow-lg">${esc(S.toast)}</div>` : "");
+}
+let tt;
+const toast = (t) => { S.toast = t; clearTimeout(tt); tt = setTimeout(() => { S.toast = ""; render(); }, 2200); };
+const ask = (text, fn) => { S.modal = { type: "confirm", text, fn }; render(); };
+const phoneToEmail = (p) => { let d = String(p || "").replace(/\D/g, ""); if (/^959\d{7,9}$/.test(d)) d = "0" + d.slice(2); else if (/^9\d{7,9}$/.test(d)) d = "0" + d; return d + "@pos.shop"; };
+const notify = (t) => { toast(t); render(); };
+const shopPatch = (s) => ({ status: s.status, expires_at: s.expires_at, monthly_fee: s.monthly_fee });
+async function load() {
+  const [sh, mem, pay] = await Promise.all([sb.from("shops").select("*"), sb.from("shop_members").select("*"), sb.from("payments").select("*")]);
+  const err = sh.error || mem.error || pay.error;
+  if (err) return notify("ဒေတာဖတ်မရပါ - " + err.message);
+  S.shops = sh.data; S.staff = {}; S.pays = {};
+  mem.data.forEach((m) => (S.staff[m.shop_id] ||= []).push({ id: m.user_id, name: m.name || "-", phone: m.phone, role: m.role, banned: m.banned, last_login: m.last_login }));
+  pay.data.forEach((p) => (S.pays[p.shop_id] ||= []).push(p));
+}
+// local state ကို အရင်ပြောင်းပြီး DB မှာ သိမ်း၊ ပြီးရင် DB ကနေ ပြန်ဖတ် (မအောင်မြင်ရင် မူလအတိုင်း ပြန်ဖြစ်)
+const persist = async (fn) => {
+  if (!sb) return;
+  const r = await fn();
+  if (r && r.error) notify("သိမ်းမရပါ - " + r.error.message);
+  await load(); render();
+};
+async function signIn(email, password) {
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+  if (error) { notify("ဝင်မရပါ - " + error.message); return false; }
+  const { data: sa } = await sb.from("super_admins").select("user_id").eq("user_id", data.user.id).maybeSingle();
+  if (!sa) { await sb.auth.signOut(); notify("Super Admin အကောင့် မဟုတ်ပါ"); return false; }
+  S.email = data.user.email; await load(); return true;
+}
+const $ = (id) => document.getElementById(id);
+const getShop = () => S.shops.find((x) => x.id === S.route.slice(5));
+const addDays = (s, n) => { const base = s.expires_at && daysLeft(s.expires_at) > 0 ? new Date(s.expires_at).getTime() : Date.now(); s.expires_at = new Date(base + n * DAY).toISOString(); };
+
+function route() {
+  const h = location.hash.slice(1) || "dashboard";
+  if (S.route !== h) { S.route = h; S.form = null; if (h === "shops" && !S.keepStatus) { /* keep filter */ } }
+  S.keepStatus = false; render(); window.scrollTo(0, 0);
+}
+window.addEventListener("hashchange", route);
+
+document.addEventListener("input", (e) => {
+  if (e.target.id === "months" || e.target.id === "fee") {
+    const s = getShop(); if (!s) return;
+    const months = +$("months").value || 1, fee = +$("fee").value || 0;
+    if (e.target.id === "months") $("amount").value = months * s.monthly_fee;
+    S.form = { months, amount: +$("amount").value, fee };
+    $("renewBtn").textContent = `ငွေလက်ခံ + ${months} လ တိုးမည်`;
+  }
+  if (e.target.id === "amount" && S.form) S.form.amount = +e.target.value;
+});
+
+document.addEventListener("change", (e) => {
+  const m = S.modal;
+  if (e.target.id === "ap-status" && m && m.type === "approve") {
+    m.fee = +$("ap-fee").value || 0;
+    if ($("ap-days")) m.days = +$("ap-days").value || 14;
+    if ($("ap-date")) m.date = $("ap-date").value;
+    m.status = e.target.value; render();
+  }
+});
+
+document.addEventListener("submit", async (e) => {
+  const t = e.target.dataset.form; if (!t) return;
+  e.preventDefault();
+  if (t === "login") {
+    if (sb && !(await signIn($("email").value.trim(), $("pw").value))) return;
+    S.authed = true; location.hash = "dashboard"; S.route = "dashboard"; render();
+  }
+  if (t === "search") { S.q = $("q").value; render(); }
+  if (t === "create") {
+    const days = +$("c-days").value;
+    if (sb) {
+      const body = { name: $("c-name").value, owner_name: $("c-owner").value, phone: $("c-phone").value, email: phoneToEmail($("c-phone").value), password: $("c-pw").value, status: $("c-status").value, days, monthly_fee: +$("c-fee").value };
+      const { data, error } = await sb.functions.invoke("create-shop", { body });
+      if (error || data?.error) { let msg = data?.error || error.message; try { msg = (await error.context.json()).error || msg; } catch {} return notify("မဖန်တီးနိုင်ပါ - " + msg); }
+      S.modal = null; await load(); return notify("ဆိုင်အသစ် ဖန်တီးပြီး");
+    }
+    S.shops.push({ id: String(Date.now()), name: $("c-name").value, owner_name: $("c-owner").value, phone: $("c-phone").value, status: $("c-status").value, expires_at: iso(days), monthly_fee: +$("c-fee").value, created_at: iso(0) });
+    S.modal = null; toast("ဆိုင်အသစ် ဖန်တီးပြီး"); render();
+  }
+});
+
+document.addEventListener("click", (e) => {
+  const el = e.target.closest("[data-act]"); if (!el) return;
+  const a = el.dataset.act, v = el.dataset.v, id = el.dataset.id;
+  const s = S.route.startsWith("shop-") ? getShop() : null;
+  if (el.hasAttribute("data-backdrop") && e.target !== el) return;
+  if (a === "close") { S.modal = null; return render(); }
+  if (a === "logout") { if (sb) sb.auth.signOut(); S.authed = false; return render(); }
+  if (a === "tab") { S.status = v; return render(); }
+  if (a === "go-status") { S.status = v; S.q = ""; return; }
+  if (a === "open-create") { S.modal = { type: "create" }; return render(); }
+  if (a === "open-approve") { S.modal = { type: "approve", id, status: "trial", mode: "days", days: 14, date: "", fee: 30000, paid: false }; return render(); }
+  if (a === "ap-mode") { S.modal.mode = v; return render(); }
+  if (a === "ap-days") { S.modal.days = +v; return render(); }
+  if (a === "approve") {
+    const m = S.modal, sh = S.shops.find((x) => x.id === m.id);
+    const status = $("ap-status").value, fee = +$("ap-fee").value, paid = $("ap-paid")?.checked;
+    sh.status = status; sh.monthly_fee = fee;
+    sh.expires_at = m.mode === "days" ? iso(+($("ap-days").value || 14)) : ($("ap-date").value ? new Date($("ap-date").value).toISOString() : iso(14));
+    if (status === "active" && paid) (S.pays[sh.id] ||= []).push({ id: "p" + Date.now(), paid_at: iso(0), months: 1, amount: fee });
+    persist(async () => { const r = await sb.from("shops").update(shopPatch(sh)).eq("id", sh.id); if (r.error || !(status === "active" && paid)) return r; return sb.from("payments").insert({ shop_id: sh.id, months: 1, amount: fee }); });
+    S.modal = null; toast(`${sh.name} ကို ဖွင့်ပေးပြီး`); return render();
+  }
+  if (a === "reject") { const sh = S.shops.find((x) => x.id === id); return ask(`${sh.name} ကို ပယ်ချမည်လား?`, () => { sh.status = "rejected"; persist(() => sb.from("shops").update(shopPatch(sh)).eq("id", sh.id)); toast("ပယ်ချပြီး"); }); }
+  if (a === "confirm-yes") { const fn = S.modal.fn; S.modal = null; fn(); return render(); }
+  if (!s) return;
+  if (a === "staff") {
+    const m = S.staff[s.id].find((x) => x.id === id);
+    const flip = () => { m.banned = !m.banned; persist(() => sb.from("shop_members").update({ banned: m.banned }).eq("user_id", m.id).eq("shop_id", s.id)); toast(m.banned ? "အကောင့် ပိတ်ပြီး" : "အကောင့် ပြန်ဖွင့်ပြီး"); };
+    return m.banned ? (flip(), render()) : ask(`${m.name} ၏ အကောင့်ကို ပိတ်မည်လား?\nလော့ဂ်အင်ဝင်၍ မရတော့ပါ။`, flip);
+  }
+  if (a === "renew") {
+    const months = +$("months").value || 1, amount = +$("amount").value || 0;
+    addDays(s, months * 30); if (s.status === "pending") s.status = "active";
+    (S.pays[s.id] ||= []).push({ id: "p" + Date.now(), paid_at: iso(0), months, amount });
+    persist(async () => { const r = await sb.from("shops").update(shopPatch(s)).eq("id", s.id); return r.error ? r : sb.from("payments").insert({ shop_id: s.id, months, amount }); });
+    S.form = null; toast(`${months} လ တိုးပြီး`); return render();
+  }
+  if (a === "extend") { addDays(s, +v); persist(() => sb.from("shops").update(shopPatch(s)).eq("id", s.id)); toast(`+${v} ရက် တိုးပြီး`); return render(); }
+  if (a === "setfee") { s.monthly_fee = +$("fee").value || 0; persist(() => sb.from("shops").update(shopPatch(s)).eq("id", s.id)); S.form = null; toast("ကြေးနှုန်း ပြောင်းပြီး"); return render(); }
+  if (a === "suspend") return ask("ဤဆိုင်ကို ချက်ချင်း ပိတ်သိမ်းမည်လား?", () => { s.status = "suspended"; persist(() => sb.from("shops").update(shopPatch(s)).eq("id", s.id)); toast("ပိတ်သိမ်းပြီး"); });
+  if (a === "reactivate") { s.status = "active"; persist(() => sb.from("shops").update(shopPatch(s)).eq("id", s.id)); toast("ပြန်ဖွင့်ပြီး"); return render(); }
+});
+
+route();
+if (sb) sb.auth.getSession().then(async ({ data }) => {
+  const u = data.session && data.session.user; if (!u) return;
+  const { data: sa } = await sb.from("super_admins").select("user_id").eq("user_id", u.id).maybeSingle();
+  if (sa) { S.email = u.email; await load(); S.authed = true; render(); }
+});
+</script>
+
+</body></html>
