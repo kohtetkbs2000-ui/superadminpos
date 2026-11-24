@@ -1,0 +1,53 @@
+name: Build Super Admin APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Check index.html exists
+        run: test -f index.html || (echo "repo root ထဲမှာ index.html မရှိပါ" && exit 1)
+
+      - name: Prepare Capacitor project
+        run: |
+          mkdir -p www
+          cp index.html www/index.html
+          npm init -y
+          npm install @capacitor/core@6 @capacitor/cli@6 @capacitor/android@6
+          npx cap init "POS Super Admin" com.possuperadmin.app --web-dir=www
+          cat > capacitor.config.json <<'EOF'
+          {
+            "appId": "com.possuperadmin.app",
+            "appName": "POS Super Admin",
+            "webDir": "www",
+            "server": { "androidScheme": "https" }
+          }
+          EOF
+          npx cap add android
+          npx cap sync android
+
+      - name: Build debug APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: pos-super-admin-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
