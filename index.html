@@ -9,6 +9,93 @@
   button, input, select { font: inherit; }
   :focus-visible { outline: 2px solid #4f46e5; outline-offset: 2px; }
   .gutter { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+
+  button, a { transition: transform .15s ease, box-shadow .2s ease, background-color .2s ease, color .2s ease, border-color .2s ease, opacity .2s; }
+  button:active:not(:disabled) { transform: scale(.96); }
+  button:disabled { opacity: .6; }
+  svg { transition: transform .25s cubic-bezier(.2,.8,.2,1); }
+  .wig:hover svg { transform: rotate(-8deg) scale(1.12); }
+  .lift { transition: transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s ease; }
+  .lift:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(15,23,42,.10); }
+  .lift:active { transform: scale(.985); }
+  .lift:hover svg { transform: scale(1.12) rotate(-4deg); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @keyframes pop { 0% { opacity: 0; transform: scale(.6); } 70% { transform: scale(1.06); } 100% { opacity: 1; transform: scale(1); } }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes sheetUp { from { transform: translateY(48px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes zoomIn { from { transform: scale(.92); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes toastIn { from { opacity: 0; transform: translate(-50%, 18px) scale(.94); } to { opacity: 1; transform: translate(-50%, 0) scale(1); } }
+  @keyframes ring { 0% { box-shadow: 0 0 0 0 rgba(245,158,11,.6); } 100% { box-shadow: 0 0 0 9px rgba(245,158,11,0); } }
+  @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .animate .rise { animation: fadeUp .5s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 55ms); }
+  .animate .popin { animation: pop .55s cubic-bezier(.2,.8,.2,1) both; animation-delay: calc(var(--i, 0) * 55ms); }
+  .animate .indic { animation: grow .35s ease both; }
+  .m-bd { animation: fade .25s both; }
+  .m-sheet { animation: sheetUp .38s cubic-bezier(.2,.8,.2,1) both; }
+  @media (min-width: 640px) { .m-sheet { animation-name: zoomIn; } }
+  .toast-in { animation: toastIn .32s cubic-bezier(.2,.8,.2,1) both; }
+  @keyframes ringg { 0% { box-shadow: 0 0 0 0 rgba(16,185,129,.65); } 100% { box-shadow: 0 0 0 8px rgba(16,185,129,0); } }
+  .pulse-green { animation: ringg 1.6s ease-out infinite; }
+
+  .rip { position: relative; overflow: hidden; }
+  .ripple { position: absolute; border-radius: 50%; background: currentColor; opacity: .25; transform: scale(0); pointer-events: none; animation: ripple .6s ease-out forwards; }
+  @keyframes ripple { to { transform: scale(1); opacity: 0; } }
+  .blob { position: absolute; border-radius: 50%; filter: blur(48px); opacity: .5; z-index: 0; pointer-events: none; animation: drift 11s ease-in-out infinite alternate; }
+  .b1 { width: 260px; height: 260px; background: #818cf8; top: 4%; left: -6%; }
+  .b2 { width: 220px; height: 220px; background: #38bdf8; bottom: 6%; right: -4%; animation-duration: 14s; animation-delay: -4s; }
+  .b3 { width: 180px; height: 180px; background: #c084fc; top: 42%; left: 52%; animation-duration: 16s; animation-delay: -8s; }
+  @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(40px,-30px) scale(1.2); } }
+  .shine { position: relative; overflow: hidden; }
+  .shine::after { content: ""; position: absolute; top: 0; left: -60%; width: 40%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.4), transparent); transform: skewX(-20deg); animation: shineMove 3.2s ease-in-out infinite; }
+  @keyframes shineMove { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+  .anim-shake svg { animation: shake 2.6s ease-in-out infinite; transform-origin: 50% 20%; }
+  .anim-flip svg { animation: flipH 3.4s cubic-bezier(.6,0,.3,1) infinite; }
+  @keyframes shake { 0%,60%,100% { transform: rotate(0); } 66% { transform: rotate(-14deg); } 72% { transform: rotate(12deg); } 78% { transform: rotate(-8deg); } 84% { transform: rotate(5deg); } }
+  @keyframes flipH { 0%,55% { transform: rotate(0); } 80%,100% { transform: rotate(180deg); } }
+  .flash { animation: flash 1.3s ease-out; }
+  @keyframes flash { 0% { background-color: rgba(16,185,129,.45); transform: scale(1.08); } 100% { background-color: transparent; transform: none; } }
+  .leave { animation: leave .34s cubic-bezier(.5,0,.8,.4) forwards; overflow: hidden; }
+  @keyframes leave { to { opacity: 0; transform: translateX(48px) scale(.96); max-height: 0; padding-top: 0; padding-bottom: 0; margin: 0; } }
+  .ringp { stroke-dashoffset: var(--o); }
+  .animate .ringp { animation: ringfill 1.2s cubic-bezier(.2,.8,.2,1) .3s both; }
+  @keyframes ringfill { from { stroke-dashoffset: var(--c); } to { stroke-dashoffset: var(--o); } }
+  .toast-bar { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: #34d399; transform-origin: left; animation: tbar 2.2s linear forwards; }
+  @keyframes tbar { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+  .burst { position: fixed; inset: 0; z-index: 50; pointer-events: none; display: grid; place-items: center; }
+  .burst-c { grid-area: 1/1; width: 84px; height: 84px; border-radius: 50%; background: #10b981; color: #fff; display: grid; place-items: center; box-shadow: 0 10px 30px rgba(16,185,129,.45); animation: bPop 1.3s cubic-bezier(.2,.9,.3,1.3) both; }
+  .burst-t { grid-area: 1/1; margin-top: 150px; font-weight: 600; font-size: 14px; background: #0f172a; color: #fff; padding: 6px 14px; border-radius: 99px; animation: bPop 1.3s both; }
+  .burst i { grid-area: 1/1; width: 9px; height: 9px; border-radius: 2px; animation: bFly .9s cubic-bezier(.2,.8,.3,1) both; }
+  @keyframes bPop { 0% { opacity: 0; transform: scale(.3); } 25% { opacity: 1; transform: scale(1.12); } 40% { transform: scale(1); } 80% { opacity: 1; } 100% { opacity: 0; transform: scale(.95); } }
+  @keyframes bFly { 0% { opacity: 1; transform: rotate(var(--a)) translateX(0) scale(1); } 100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d)) scale(.4) rotate(240deg); } }
+  .pulse-ring { animation: ring 1.8s ease-out infinite; }
+  .floaty { animation: float 3.2s ease-in-out infinite; }
+  .spin { animation: spin .8s linear infinite; }
+  .bar { height: 6px; background: #e2e8f0; border-radius: 99px; overflow: hidden; }
+  .bar > i { display: block; height: 100%; border-radius: 99px; transform-origin: left; }
+  .animate .bar > i { animation: grow .9s cubic-bezier(.2,.8,.2,1) .25s both; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+
+  .conn { position: relative; width: 96px; height: 96px; margin: 4px auto 0; display: grid; place-items: center; }
+  .conn .wave { position: absolute; inset: 0; border-radius: 50%; border: 2px solid #6366f1; opacity: 0; animation: wave 1.9s ease-out infinite; }
+  .conn .wave:nth-child(2) { animation-delay: .63s; } .conn .wave:nth-child(3) { animation-delay: 1.26s; }
+  .conn .core { position: relative; width: 56px; height: 56px; border-radius: 16px; background: #4f46e5; color: #fff; display: grid; place-items: center; box-shadow: 0 8px 24px rgba(79,70,229,.35); animation: breathe 1.6s ease-in-out infinite; }
+  .conn .core svg { width: 28px; height: 28px; }
+  @keyframes wave { 0% { transform: scale(.55); opacity: .7; } 100% { transform: scale(1.5); opacity: 0; } }
+  @keyframes breathe { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+  .dots i { display: inline-block; width: 5px; height: 5px; border-radius: 50%; background: currentColor; margin-left: 3px; animation: dotb 1.2s infinite both; }
+  .dots i:nth-child(2) { animation-delay: .2s; } .dots i:nth-child(3) { animation-delay: .4s; }
+  @keyframes dotb { 0%,80%,100% { opacity: .2; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-4px); } }
+  .indet { height: 4px; background: #e2e8f0; border-radius: 99px; overflow: hidden; position: relative; }
+  .indet::after { content: ""; position: absolute; top: 0; bottom: 0; left: 0; width: 40%; background: #4f46e5; border-radius: 99px; animation: indet 1.3s ease-in-out infinite; }
+  @keyframes indet { 0% { transform: translateX(-100%); } 100% { transform: translateX(260%); } }
+  .stp { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #94a3b8; transition: color .3s, transform .3s; }
+  .stp.now { color: #0f172a; font-weight: 500; transform: translateX(3px); }
+  .stp.done { color: #059669; }
+  .stp .si { width: 20px; height: 20px; display: grid; place-items: center; }
+  .stp .si svg { width: 18px; height: 18px; }
+  .stp.done .si svg { animation: pop .4s both; }
   .demo-bar { background: #fef3c7; color: #92400e; font-size: 12px; text-align: center; padding: 4px 8px; }
 </style>
 
@@ -34,11 +121,12 @@ const S = {
   ],
   staff: {
     "1": [
-      { id: "u1", name: "မမြ", phone: "09 111 222 333", role: "cashier", banned: false, last_login: iso(-0.1) },
-      { id: "u2", name: "ကိုထွန်း", phone: "09 444 555 666", role: "cashier", banned: false, last_login: iso(-1) },
-      { id: "u3", name: "မစန္ဒာ", phone: null, role: "manager", banned: true, last_login: iso(-30) },
+      { id: "o1", name: "ဦးအောင်မြင့်", phone: "09 421 556 780", role: "owner", banned: false, last_login: iso(-0.05), last_seen: iso(0) },
+      { id: "u1", name: "မမြ", phone: "09 111 222 333", role: "cashier", banned: false, last_login: iso(-0.1), last_seen: iso(0) },
+      { id: "u2", name: "ကိုထွန်း", phone: "09 444 555 666", role: "cashier", banned: false, last_login: iso(-1), last_seen: iso(-0.004) },
+      { id: "u3", name: "မစန္ဒာ", phone: null, role: "manager", banned: true, last_login: iso(-30), last_seen: iso(-30) },
     ],
-    "2": [{ id: "u4", name: "မဝါဝါ", phone: "09 777 888 999", role: "cashier", banned: false, last_login: null }],
+    "2": [{ id: "o2", name: "ဒေါ်ခင်မာလာ", phone: "09 795 120 334", role: "owner", banned: false, last_login: iso(-2), last_seen: iso(-2) }, { id: "u4", name: "မဝါဝါ", phone: "09 777 888 999", role: "cashier", banned: false, last_login: null }],
   },
   pays: {
     "1": [{ id: "p1", paid_at: iso(-9), months: 1, amount: 30000 }, { id: "p2", paid_at: iso(-39), months: 3, amount: 90000 }],
@@ -51,7 +139,31 @@ const S = {
 const SUPABASE_URL = "https://ngdpngcdkowozbfqgpuv.supabase.co";       // ဥပမာ https://abcdxyz.supabase.co
 const SUPABASE_ANON_KEY = "sb_publishable_LJLquuIMRJTiUee_1KN1xQ_06ShRrD6";  // Project Settings > API > anon public key (service_role မထည့်ရ)
 const sb = (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-if (sb) { S.shops = []; S.staff = {}; S.pays = {}; document.querySelector(".demo-bar").remove(); }
+if (sb) { S.shops = []; S.staff = {}; S.pays = {}; S.plans = []; S.sess = {}; S.audit = []; document.querySelector(".demo-bar").remove(); }
+else {
+  S.plans = [
+    { id: "pl1", name: "Basic", price: 15000, months: 1, max_devices: 2, note: "ဆိုင်သေး — စက် ၂ လုံး", active: true },
+    { id: "pl2", name: "Standard", price: 30000, months: 1, max_devices: 3, note: "ပုံမှန်ဆိုင် — စက် ၃ လုံး", active: true },
+    { id: "pl3", name: "Pro ၃ လ", price: 80000, months: 3, max_devices: 5, note: "၃ လစာ လျှော့ဈေး", active: true },
+    { id: "pl4", name: "Yearly", price: 300000, months: 12, max_devices: 10, note: "တစ်နှစ်စာ — စက် ၁၀ လုံး", active: true },
+  ];
+  Object.assign(S.shops.find((x) => x.id === "1"), { plan_id: "pl2", max_devices: 3 });
+  Object.assign(S.shops.find((x) => x.id === "2"), { plan_id: "pl1", max_devices: 2 });
+  [["p1", "Standard", "KPay", "admin@example.com", ""], ["p2", "Pro ၃ လ", "Wave Pay", "admin@example.com", "၃ လစာ ကြိုပေး"], ["p3", "Basic", "ငွေသား", "aung@admin.com", ""], ["p4", "Basic", "ဘဏ်လွှဲ", "aung@admin.com", "လက်ခံပြီး"]].forEach(([pid, pn, me, ad, no]) => Object.values(S.pays).flat().forEach((p) => { if (p.id === pid) Object.assign(p, { plan_name: pn, method: me, admin_email: ad, note: no }); }));
+  S.sess = { "1": [
+    { id: 1, shop_id: "1", user_name: "ဦးအောင်မြင့်", role: "owner", device_label: "Android Tablet", first_seen: iso(-20), last_seen: iso(0), revoked: false, live: true },
+    { id: 2, shop_id: "1", user_name: "မမြ", role: "cashier", device_label: "iPhone", first_seen: iso(-10), last_seen: iso(0), revoked: false, live: true },
+    { id: 3, shop_id: "1", user_name: "ကိုထွန်း", role: "cashier", device_label: "Windows PC", first_seen: iso(-5), last_seen: iso(0), revoked: false, live: true },
+    { id: 4, shop_id: "1", user_name: "မစန္ဒာ", role: "manager", device_label: "Android Phone", first_seen: iso(-3), last_seen: iso(-1), revoked: false },
+  ], "2": [{ id: 5, shop_id: "2", user_name: "မဝါဝါ", role: "cashier", device_label: "Android Phone", first_seen: iso(-2), last_seen: iso(0), revoked: false, live: true }] };
+  S.audit = [
+    { id: "a1", created_at: iso(-1), admin_email: "admin@example.com", shop_id: "1", shop_name: "ရွှေဝါ စူပါမားကတ်", action: "kick", detail: "Android Phone (မစန္ဒာ) ကို Session ဖြုတ်ချ" },
+    { id: "a2", created_at: iso(-3), admin_email: "aung@admin.com", shop_id: "1", shop_name: "ရွှေဝါ စူပါမားကတ်", action: "limit", detail: "Device ကန့်သတ်ချက် → 3 လုံး" },
+    { id: "a3", created_at: iso(-5), admin_email: "admin@example.com", shop_id: "3", shop_name: "ကိုကိုလေး ကော်ဖီဆိုင်", action: "approve", detail: "Approve (Trial) · ၁၄ ရက်" },
+    { id: "a4", created_at: iso(-6), admin_email: "admin@example.com", shop_id: "2", shop_name: "မြတ်ငြိမ်း ဆေးဆိုင်", action: "extend", detail: "+7 ရက် (အခမဲ့)" },
+    { id: "a5", created_at: iso(-10), admin_email: "aung@admin.com", shop_id: "5", shop_name: "ရတနာ ဘောလုံးဈေး", action: "suspend", detail: "ပိတ်သိမ်း" },
+  ];
+}
 
 const icons = {
   dashboard: '<rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/>',
@@ -70,6 +182,30 @@ const icons = {
   lock: '<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
   unlock: '<rect width="18" height="11" x="3" y="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/>',
   back: '<path d="m15 18-6-6 6-6"/>',
+  server: '<rect width="20" height="8" x="2" y="2" rx="2"/><rect width="20" height="8" x="2" y="14" rx="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/>',
+  database: '<ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/>',
+  minus: '<path d="M5 12h14"/>',
+  download: '<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/>',
+  edit: '<path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z"/>',
+  trash: '<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  plus: '<path d="M5 12h14"/><path d="M12 5v14"/>',
+  xc: '<circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>',
+  cal: '<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  calplus: '<path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/><path d="M10 16h4"/><path d="M12 14v4"/>',
+  wallet: '<path d="M19 7V4a1 1 0 0 0-1-1H5a2 2 0 0 0 0 4h15a1 1 0 0 1 1 1v4h-3a2 2 0 0 0 0 4h3a1 1 0 0 0 1-1v-2a1 1 0 0 0-1-1"/><path d="M3 5v14a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4"/>',
+  coins: '<circle cx="8" cy="8" r="6"/><path d="M18.09 10.37A6 6 0 1 1 10.34 18"/><path d="M7 6h1v4"/><path d="m16.71 13.88.7.71-2.82 2.82"/>',
+  tag: '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>',
+  power: '<path d="M12 2v10"/><path d="M18.4 6.6a9 9 0 1 1-12.77.04"/>',
+  receipt: '<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 17.5v-11"/>',
+  sliders: '<line x1="21" x2="14" y1="4" y2="4"/><line x1="10" x2="3" y1="4" y2="4"/><line x1="21" x2="12" y1="12" y2="12"/><line x1="8" x2="3" y1="12" y2="12"/><line x1="21" x2="16" y1="20" y2="20"/><line x1="12" x2="3" y1="20" y2="20"/><line x1="14" x2="14" y1="2" y2="6"/><line x1="8" x2="8" y1="10" y2="14"/><line x1="16" x2="16" y1="18" y2="22"/>',
+  shield: '<path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/>',
+  mail: '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+  key: '<path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/>',
+  trend: '<polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>',
+  alert: '<path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/>',
+  play: '<circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>',
+  spin: '<path d="M21 12a9 9 0 1 1-6.219-8.56"/>',
+  login: '<path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" x2="3" y1="12" y2="12"/>',
   phone: '<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>',
 };
 const ic = (n, c = "w-4 h-4") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 ${c}" aria-hidden="true">${icons[n]}</svg>`;
@@ -88,58 +224,233 @@ const badgeMap = {
   active: ["Active", "bg-emerald-100 text-emerald-800"], suspended: ["ပိတ်သိမ်း", "bg-red-100 text-red-800"],
   rejected: ["ပယ်ချ", "bg-slate-200 text-slate-700"], expired: ["သက်တမ်းကုန်", "bg-rose-100 text-rose-800"],
 };
-const badge = (s) => { const [l, c] = badgeMap[isExpired(s) ? "expired" : s.status]; return `<span class="text-xs px-2 py-0.5 rounded-full font-medium ${c}">${l}</span>`; };
+const badge = (s) => { const [l, c] = badgeMap[isExpired(s) ? "expired" : s.status]; const k = isExpired(s) ? "expired" : s.status; return `<span class="inline-flex items-center gap-1 shrink-0 text-xs px-2 py-0.5 rounded-full font-medium ${c}"><i class="w-1.5 h-1.5 rounded-full bg-current ${k === "pending" ? "pulse-ring" : ""}"></i>${l}</span>`; };
 
 const tabs = [
   ["all", "အားလုံး", "list", () => true], ["pending", "စောင့်ဆိုင်း", "clock", (s) => s.status === "pending"],
   ["trial", "Trial", "flask", (s) => s.status === "trial" && !isExpired(s)], ["active", "Active", "check", (s) => s.status === "active" && !isExpired(s)],
   ["soon", "ကုန်ခါနီး", "hourglass", isSoon], ["dead", "ပိတ်သိမ်း/ကုန်", "ban", isDead],
 ];
-const nav = [["dashboard", "Dashboard", "dashboard"], ["pending", "လျှောက်လွှာ", "inbox"], ["shops", "ဆိုင်များ", "store"]];
+const nav = [["dashboard", "Dashboard", "dashboard"], ["pending", "လျှောက်လွှာ", "inbox"], ["shops", "ဆိုင်များ", "store"], ["history", "မှတ်တမ်း", "receipt"], ["plans", "Plans", "tag"]];
 
 const cls = { inp: "w-full border rounded-lg px-3 py-2 mt-1 bg-white", card: "bg-white rounded-xl shadow-sm p-4" };
 
+
+/* ---------- presence (who is logged in right now) ---------- */
+const ONLINE_MS = 50000;
+const isOnline = (m) => !m.banned && m.last_seen && Date.now() - new Date(m.last_seen).getTime() < ONLINE_MS;
+const ago = (v) => { const t = Math.max(0, Math.floor((Date.now() - new Date(v).getTime()) / 1000)); if (t < 60) return t + " စက္ကန့်"; if (t < 3600) return Math.floor(t / 60) + " မိနစ်"; if (t < 86400) return Math.floor(t / 3600) + " နာရီ"; return Math.floor(t / 86400) + " ရက်"; };
+const pill = (cls, inner) => `<span class="inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-full font-medium ${cls}">${inner}</span>`;
+const presHtml = (m) => m.banned ? pill("bg-red-100 text-red-800", ic("lock", "w-3 h-3") + "ပိတ်ထား")
+  : isOnline(m) ? pill("bg-emerald-100 text-emerald-800", '<i class="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-green"></i>Online - ဝင်ထားဆဲ')
+  : pill("bg-slate-100 text-slate-600", ic("clock", "w-3 h-3") + (m.last_seen ? "ထွက်ထား · " + ago(m.last_seen) + "အကြာ" : m.last_login ? "ထွက်ထား" : "မဝင်ဖူးသေး"));
+const roleCls = (r) => r === "owner" ? "bg-violet-100 text-violet-700" : r === "manager" ? "bg-sky-100 text-sky-700" : "bg-slate-100 text-slate-600";
+const onlineN = (id) => (S.staff[id] || []).filter(isOnline).length;
+const onlPill = (id) => { const n = onlineN(id); return n ? pill("bg-emerald-100 text-emerald-800 mr-1", `<i class="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-green"></i>${n} online`) : ""; };
+const onlTxt = (id) => { const n = onlineN(id); return n ? `<span class="text-emerald-600 font-medium">Online ${n}</span>` : ""; };
+function paintPresence() {
+  const all = Object.values(S.staff).flat();
+  const put = (el, h) => { if (el.innerHTML === h) return; el.innerHTML = h; el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash"); };
+  document.querySelectorAll("[data-pres]").forEach((el) => { const m = all.find((x) => x.id === el.dataset.pres); if (m) put(el, presHtml(m)); });
+  document.querySelectorAll("[data-onl]").forEach((el) => put(el, onlPill(el.dataset.onl)));
+  document.querySelectorAll("[data-onc]").forEach((el) => put(el, onlTxt(el.dataset.onc)));
+  document.querySelectorAll("[data-sesslist]").forEach((el) => { const sh = S.shops.find((x) => String(x.id) === el.dataset.sesslist); if (!sh) return; const h = sessHtml(sh); if (el.innerHTML !== h) el.innerHTML = h; });
+  document.querySelectorAll("[data-sesssum]").forEach((el) => { const sh = S.shops.find((x) => String(x.id) === el.dataset.sesssum); if (sh) el.innerHTML = sessSum(sh); });
+  const t = document.querySelector("[data-onall]"); if (t) t.textContent = all.filter(isOnline).length;
+}
+async function pollPresence() {
+  if (!S.authed || S.busy || S.modal) return;
+  const n0 = Object.values(S.staff).flat().length;
+  if (sb) {
+    const r = await sb.from("shop_members").select("*");
+    if (S.busy || r.error || !r.data) return;
+    const st = {};
+    r.data.forEach((m) => (st[m.shop_id] ||= []).push({ id: m.user_id, name: m.name || "-", phone: m.phone, role: m.role, banned: m.banned, last_login: m.last_login, last_seen: m.last_seen }));
+    S.staff = st;
+    const ss = await sb.from("shop_sessions").select("*");
+    if (!ss.error && ss.data) { S.sess = {}; ss.data.forEach((x) => (S.sess[x.shop_id] ||= []).push(x)); }
+  } else {
+    Object.values(S.sess || {}).flat().forEach((x) => { if (x.live && !x.revoked) x.last_seen = iso(0); });
+    ["o1", "u1"].forEach((id) => { const m = (S.staff["1"] || []).find((x) => x.id === id); if (m) m.last_seen = iso(0); });
+  }
+  if (S.route.startsWith("shop-") && Object.values(S.staff).flat().length !== n0) return render();
+  paintPresence();
+}
+
+/* ---------- server data size per shop ---------- */
+const fmtB = (b) => b < 1024 ? b + " B" : b < 1048576 ? (b / 1024).toFixed(1) + " KB" : (b / 1048576).toFixed(2) + " MB";
+const useOf = (id) => (S.usage || {})[String(id)] || { bytes: 0, rows: 0 };
+const useHtml = (id) => S.usageOk ? ic("database", "w-3 h-3") + fmtB(useOf(id).bytes) : "";
+const usageTxt = (id) => S.usageOk ? fmtB(useOf(id).bytes) + " (" + new Intl.NumberFormat("en-US").format(useOf(id).rows) + " ခု)" : "—";
+const totTxt = () => S.usageOk ? fmtB(S.shops.reduce((a, x) => a + useOf(x.id).bytes, 0)) : "—";
+function paintUsage() {
+  document.querySelectorAll("[data-use]").forEach((el) => (el.innerHTML = useHtml(el.dataset.use)));
+  document.querySelectorAll("[data-usev]").forEach((el) => (el.textContent = usageTxt(el.dataset.usev)));
+  document.querySelectorAll("[data-usetot]").forEach((el) => (el.textContent = totTxt()));
+}
+async function loadUsage() {
+  if (!sb) { S.usage = { 1: { bytes: 2516582, rows: 1840 }, 2: { bytes: 842000, rows: 612 }, 3: { bytes: 51200, rows: 75 }, 6: { bytes: 1200000, rows: 900 } }; S.usageOk = true; return paintUsage(); }
+  const r = await sb.rpc("shop_usage");
+  if (r.error) { S.usageOk = false; S.usageErr = r.error.message; console.warn("shop_usage:", r.error.message); return; }
+  S.usage = Object.fromEntries((r.data || []).map((u) => [String(u.shop_id), { bytes: +u.bytes, rows: +u.rows }]));
+  S.usageOk = true; S.usageErr = ""; paintUsage();
+}
+
+/* ---------- extra motion: confetti burst + click ripple ---------- */
+const calm = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+function burst(label) {
+  if (calm()) return;
+  const el = document.createElement("div"); el.className = "burst";
+  const cols = ["#6366f1", "#10b981", "#f59e0b", "#ef4444", "#0ea5e9", "#a855f7"];
+  let h = `<div class="burst-c">${ic("check", "w-10 h-10")}</div><p class="burst-t">${esc(label)}</p>`;
+  for (let i = 0; i < 24; i++) h += `<i style="--a:${(i / 24) * 360 + Math.random() * 10}deg;--d:${90 + Math.random() * 100}px;background:${cols[i % cols.length]};animation-delay:${Math.floor(Math.random() * 90)}ms"></i>`;
+  el.innerHTML = h; document.body.appendChild(el); setTimeout(() => el.remove(), 1500);
+}
+document.addEventListener("pointerdown", (e) => {
+  if (calm()) return;
+  const el = e.target.closest("button, .lift"); if (!el || el.disabled) return;
+  el.classList.add("rip");
+  const r = el.getBoundingClientRect(), d = Math.max(r.width, r.height) * 2, sp = document.createElement("span");
+  sp.className = "ripple"; sp.style.cssText = `width:${d}px;height:${d}px;left:${e.clientX - r.left - d / 2}px;top:${e.clientY - r.top - d / 2}px`;
+  el.appendChild(sp); setTimeout(() => sp.remove(), 650);
+});
+
+/* ---------- audit log / plans / sessions helpers ---------- */
+const AUD = {
+  pay: ["wallet", "bg-emerald-100 text-emerald-600", "ကြေးကောက်ခံ / သက်တမ်းတိုး"],
+  extend: ["calplus", "bg-sky-100 text-sky-600", "သက်တမ်း အခမဲ့တိုး"],
+  approve: ["check", "bg-emerald-100 text-emerald-600", "ခွင့်ပြု (Approve)"],
+  reject: ["xc", "bg-slate-200 text-slate-600", "ပယ်ချ"],
+  suspend: ["power", "bg-red-100 text-red-600", "ပိတ်သိမ်း"],
+  reactivate: ["play", "bg-indigo-100 text-indigo-600", "ပြန်ဖွင့်"],
+  create: ["plus", "bg-indigo-100 text-indigo-600", "ဆိုင်အသစ် ဖန်တီး"],
+  fee: ["tag", "bg-amber-100 text-amber-600", "ကြေးနှုန်း ပြောင်း"],
+  plan: ["tag", "bg-violet-100 text-violet-600", "Plan စီမံ"],
+  limit: ["sliders", "bg-orange-100 text-orange-600", "Device ကန့်သတ်ချက်"],
+  kick: ["logout", "bg-red-100 text-red-600", "Session ဖြုတ်ချ"],
+  ban: ["lock", "bg-red-100 text-red-600", "အကောင့် ပိတ်"],
+  unban: ["unlock", "bg-indigo-100 text-indigo-600", "အကောင့် ဖွင့်"],
+};
+function logA(shop, action, detail, extra = {}) {
+  const row = { created_at: new Date().toISOString(), admin_email: S.email || "admin@example.com", shop_id: shop && shop.id != null ? String(shop.id) : null, shop_name: shop ? shop.name : null, action, detail: detail || "", ...extra };
+  (S.audit ||= []).unshift({ id: "a" + Date.now() + Math.random(), ...row });
+  if (sb) Promise.resolve(sb.from("audit_log").insert(row)).catch(() => {});
+}
+async function insertPayment(row) {
+  let r = await sb.from("payments").insert(row);
+  if (r.error && /column|schema cache/i.test(r.error.message)) { const { shop_id, months, amount } = row; r = await sb.from("payments").insert({ shop_id, months, amount }); }
+  return r;
+}
+const featNote = (k) => sb && S.featOk && S.featOk[k] === false ? `<p class="mt-3 text-xs rounded-lg bg-amber-50 text-amber-800 px-3 py-2">${ic("alert", "w-4 h-4 inline mr-1")}ဒီ feature အတွက် Supabase မှာ <b>setup_plans_devices_audit.sql</b> ကို Run ရန် လိုသေးပါသည်။</p>` : "";
+const dt = (v) => new Date(v).toLocaleString();
+const devIcon = (l) => /PC|Mac|Windows|Browser/i.test(l || "") ? "dashboard" : "phone";
+const ACT_MS = 120000;
+const sessActive = (x) => !x.revoked && Date.now() - new Date(x.last_seen).getTime() < ACT_MS;
+const sessOnline = (x) => !x.revoked && Date.now() - new Date(x.last_seen).getTime() < ONLINE_MS;
+const limOf = (s) => s.max_devices ?? 3;
+function sessInfo(s) {
+  const list = [...(S.sess[String(s.id)] || [])].sort((a, b) => (sessActive(b) - sessActive(a)) || new Date(b.last_seen) - new Date(a.last_seen));
+  const act = list.filter(sessActive).sort((a, b) => new Date(a.first_seen) - new Date(b.first_seen));
+  return { list, act, over: new Set(act.slice(limOf(s)).map((x) => x.id)) };
+}
+const sessSum = (s) => { const { act, over } = sessInfo(s); return `<b class="${act.length > limOf(s) ? "text-red-600" : "text-slate-700"}">${act.length} / ${limOf(s)}</b> စက် သုံးနေ${over.size ? ` · <span class="text-amber-600">${over.size} လုံး ကန့်သတ်ပြည့်၍ ဝင်မရ</span>` : ""}`; };
+function sessHtml(s) {
+  const { list, over } = sessInfo(s);
+  if (!list.length) return `<li class="py-3 text-sm text-slate-500 flex items-center gap-2">${ic("phone", "w-4 h-4 text-slate-400")}Session မရှိသေးပါ (POS မှ heartbeat ပို့မှ ပေါ်မည်)</li>`;
+  return list.slice(0, 12).map((x) => {
+    const st = x.revoked ? pill("bg-red-100 text-red-800", ic("lock", "w-3 h-3") + "ဖြုတ်ချထား")
+      : over.has(x.id) ? pill("bg-amber-100 text-amber-800", ic("alert", "w-3 h-3") + "ကန့်သတ်ပြည့် (ဝင်မရ)")
+      : sessOnline(x) ? pill("bg-emerald-100 text-emerald-800", '<i class="w-1.5 h-1.5 rounded-full bg-emerald-500 pulse-green"></i>Online')
+      : sessActive(x) ? pill("bg-slate-100 text-slate-600", "ခဏအကြာ") : pill("bg-slate-100 text-slate-500", ic("clock", "w-3 h-3") + "ထွက်ထား · " + ago(x.last_seen) + "အကြာ");
+    const btn = x.revoked ? `<button data-act="unkick" data-id="${x.id}" class="flex items-center gap-1 text-xs rounded-lg px-2.5 py-1.5 border border-indigo-300 text-indigo-700 hover:bg-indigo-50">${ic("unlock", "w-3.5 h-3.5")}ပြန်ခွင့်ပြု</button>`
+      : sessActive(x) ? `<button data-act="kick" data-id="${x.id}" class="flex items-center gap-1 text-xs rounded-lg px-2.5 py-1.5 border border-red-300 text-red-600 hover:bg-red-50">${ic("logout", "w-3.5 h-3.5")}ဖြုတ်ချ</button>` : "";
+    return `<li class="py-2.5 flex items-center gap-3">${chip(devIcon(x.device_label), x.revoked ? "bg-red-50 text-red-500" : "bg-slate-100 text-slate-600", "w-9 h-9")}<div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${esc(x.device_label || "စက်")} <span class="ml-1 text-[11px] font-normal px-1.5 py-0.5 rounded ${roleCls(x.role)}">${esc(x.user_name || "-")} · ${esc(x.role || "")}</span></p><div class="mt-1">${st}</div></div>${btn}</li>`;
+  }).join("");
+}
+function historyEntries() {
+  const pays = Object.entries(S.pays).flatMap(([sid, arr]) => arr.map((p) => { const sh = S.shops.find((x) => String(x.id) === String(sid)); return { t: p.paid_at, kind: "pay", shop_id: sid, shop_name: sh ? sh.name : "—", admin: p.admin_email || "", amount: p.amount, months: p.months, plan: p.plan_name, method: p.method, note: p.note }; }));
+  const au = (S.audit || []).map((a) => ({ t: a.created_at, kind: a.action, shop_id: a.shop_id, shop_name: a.shop_name || "", admin: a.admin_email, detail: a.detail }));
+  return [...pays, ...au].sort((a, b) => new Date(b.t) - new Date(a.t));
+}
+const HF = [["all", "အားလုံး", "list"], ["pay", "ကြေးသွင်း", "wallet"], ["extend", "သက်တမ်းတိုး", "calplus"], ["status", "အခြေအနေ", "power"], ["device", "Device", "phone"], ["other", "အခြား", "sliders"]];
+const hfMap = { pay: ["pay"], extend: ["extend"], status: ["approve", "reject", "suspend", "reactivate", "create"], device: ["limit", "kick"], other: ["fee", "plan", "ban", "unban"] };
+function historyList() {
+  const hf = S.hf || "all", hs = S.hs || "", hr = S.hr || "all", now = Date.now(), mon = new Date().toISOString().slice(0, 7);
+  return historyEntries().filter((x) => (hf === "all" || (hfMap[hf] || []).includes(x.kind)) && (!hs || String(x.shop_id) === String(hs)) && (hr === "all" || (hr === "30" ? now - new Date(x.t) < 30 * DAY : String(new Date(x.t).toISOString()).slice(0, 7) === mon)));
+}
 /* ---------- views ---------- */
+/* ---------- connecting (login) animation ---------- */
+const STEPS = ["Server ချိတ်ဆက်နေသည်", "Super Admin အကောင့် စစ်ဆေးနေသည်", "ဆိုင်ဒေတာ ဖတ်နေသည်"];
+const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+function connectingHtml() {
+  return `<div class="space-y-5 py-2" role="status" aria-live="polite">
+    <div class="conn"><span class="wave"></span><span class="wave"></span><span class="wave"></span><span class="core">${ic("server")}</span></div>
+    <p class="text-center font-semibold text-slate-800"><span id="stageTxt">${STEPS[0]}</span><span class="dots text-indigo-600 ml-1"><i></i><i></i><i></i></span></p>
+    <div class="indet"></div>
+    <ul class="space-y-2.5 pt-1">${STEPS.map((t, i) => `<li class="stp" data-s="${i}"><span class="si"></span>${t}</li>`).join("")}</ul></div>`;
+}
+function stage(n) {
+  const t = document.getElementById("stageTxt"); if (t && STEPS[n]) t.textContent = STEPS[n];
+  document.querySelectorAll(".stp").forEach((li) => {
+    const i = +li.dataset.s, st = i < n ? "done" : i === n ? "now" : "";
+    li.className = "stp " + st;
+    li.firstChild.innerHTML = i < n ? ic("check", "text-emerald-600") : i === n ? ic("spin", "text-indigo-600 spin") : ic("clock", "opacity-40");
+  });
+  if (n >= STEPS.length) { const ind = document.querySelector(".indet"); if (ind) ind.style.visibility = "hidden"; if (t) t.textContent = "ချိတ်ဆက်ပြီးပါပြီ"; }
+}
+
+const chip = (n, c, sz = "w-10 h-10") => `<span class="${sz} rounded-xl grid place-items-center shrink-0 ${c}">${ic(n, "w-5 h-5")}</span>`;
+const avatarCls = (s) => isDead(s) ? "bg-red-50 text-red-500" : s.status === "pending" ? "bg-amber-50 text-amber-600" : s.status === "trial" ? "bg-sky-50 text-sky-600" : "bg-emerald-50 text-emerald-600";
+const expBar = (s) => { const d = daysLeft(s.expires_at); if (d === null) return ""; const pct = d < 0 ? 100 : Math.max(4, Math.min(100, d / 30 * 100)); const col = d < 0 ? "#ef4444" : d <= 5 ? "#f97316" : "#10b981"; return `<div class="bar mt-2"><i style="width:${pct}%;background:${col}"></i></div>`; };
+const expRing = (s) => { const d = daysLeft(s.expires_at); if (d === null) return ""; const pct = d < 0 ? 0 : Math.min(1, d / 30), col = d < 0 ? "#ef4444" : d <= 5 ? "#f97316" : "#10b981", C = +(2 * Math.PI * 26).toFixed(1);
+  return `<div class="flex items-center gap-4 mt-3"><svg viewBox="0 0 64 64" class="w-16 h-16 shrink-0" style="transform:rotate(-90deg)"><circle cx="32" cy="32" r="26" fill="none" stroke="#e2e8f0" stroke-width="6"/><circle class="ringp" cx="32" cy="32" r="26" fill="none" stroke="${col}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${C}" style="--c:${C};--o:${(C * (1 - pct)).toFixed(1)}"/></svg><div><p class="text-2xl font-bold leading-tight" style="color:${col}">${d < 0 ? "ကုန်ပြီ" : d + " ရက်"}</p><p class="text-xs text-slate-500">${d < 0 ? "သက်တမ်း ကုန်ဆုံးပြီး" : "သက်တမ်း လက်ကျန်"}</p></div></div>`; };
+const empty = (n, t) => `<div class="rise py-10 text-center text-slate-500 text-sm"><span class="floaty inline-grid w-14 h-14 rounded-2xl bg-slate-100 text-slate-400 place-items-center mb-3">${ic(n, "w-7 h-7")}</span><p>${t}</p></div>`;
+
 function loginView() {
-  return `<main class="min-h-[70vh] grid place-items-center p-4 gutter"><form data-form="login" class="w-full max-w-sm bg-white rounded-2xl shadow p-6 space-y-4">
-    <h1 class="text-xl font-bold">Super Admin Login</h1>
-    <input class="w-full border rounded-lg px-3 py-2" type="email" id="email" placeholder="Email" ${sb ? "" : 'value="demo@example.com"'} required>
-    <input class="w-full border rounded-lg px-3 py-2" type="password" id="pw" placeholder="Password" ${sb ? "" : 'value="demo1234"'} required>
+  const fld = (id, type, ph, icn, val) => `<div class="relative">${ic(icn, "w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400")}<input class="w-full border rounded-lg pl-9 pr-3 py-2" type="${type}" id="${id}" placeholder="${ph}" ${val != null ? `value="${esc(val)}"` : ""} required></div>`;
+  return `<main class="relative overflow-hidden min-h-[70vh] grid place-items-center p-4 gutter"><div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div><form data-form="login" class="popin relative z-10 w-full max-w-sm bg-white rounded-2xl shadow p-6 space-y-4" style="--i:0">
+    <div class="flex flex-col items-center gap-2 pb-1"><span class="floaty w-14 h-14 rounded-2xl bg-indigo-600 text-white grid place-items-center shadow-lg shadow-indigo-200">${ic("shield", "w-7 h-7")}</span><h1 class="text-xl font-bold">Super Admin Login</h1></div>
+    ${fld("email", "email", "Email", "mail", S.lastEmail ?? (sb ? null : "demo@example.com"))}
+    ${fld("pw", "password", "Password", "key", sb ? null : "demo1234")}
     ${sb ? "" : `<p class="text-xs text-slate-500">Preview mode - ဘာ email/password မဆို ဝင်နိုင်သည်</p>`}
-    <button class="w-full bg-indigo-600 text-white rounded-lg py-2 font-medium">ဝင်မည်</button></form></main>`;
+    <button class="shine w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg py-2 font-medium flex items-center justify-center gap-2">${ic("login")}ဝင်မည်</button></form></main>`;
 }
 
 function shell(body) {
   const pend = S.shops.filter((s) => s.status === "pending").length;
   const on = (h) => S.route === h || (h === "shops" && S.route.startsWith("shop-"));
-  const b = pend > 0 ? `<span class="min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-white text-[11px] leading-[18px] text-center font-semibold">${pend}</span>` : "";
-  const top = nav.map(([h, l, i]) => `<a href="#${h}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${on(h) ? "bg-indigo-50 text-indigo-700" : "text-slate-600 hover:bg-slate-100"}">${ic(i)}${l}${h === "pending" ? b : ""}</a>`).join("");
-  const bot = nav.map(([h, l, i]) => `<a href="#${h}" class="relative flex flex-col items-center gap-0.5 pt-2 pb-1.5 text-[11px] font-medium ${on(h) ? "text-indigo-600" : "text-slate-500"}"><span class="relative">${ic(i, "w-6 h-6")}${h === "pending" && pend > 0 ? `<span class="absolute -top-1.5 -right-2.5 min-w-[16px] h-4 px-1 rounded-full bg-amber-500 text-white text-[10px] leading-4 text-center font-semibold">${pend}</span>` : ""}</span>${l}</a>`).join("");
+  const b = pend > 0 ? `<span class="pulse-ring min-w-[18px] h-[18px] px-1 rounded-full bg-amber-500 text-white text-[11px] leading-[18px] text-center font-semibold">${pend}</span>` : "";
+  const top = nav.map(([h, l, i]) => `<a href="#${h}" class="wig flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium ${on(h) ? "bg-indigo-50 text-indigo-700" : "text-slate-600 hover:bg-slate-100"}">${ic(i)}${l}${h === "pending" ? b : ""}</a>`).join("");
+  const bot = nav.map(([h, l, i]) => `<a href="#${h}" class="relative flex flex-col items-center gap-0.5 pt-2 pb-1.5 text-[11px] font-medium ${on(h) ? "text-indigo-600" : "text-slate-500"}">${on(h) ? '<span class="indic absolute top-0 h-0.5 w-8 bg-indigo-600 rounded-full"></span>' : ""}<span class="relative">${ic(i, "w-6 h-6")}${h === "pending" && pend > 0 ? `<span class="pulse-ring absolute -top-1.5 -right-2.5 min-w-[16px] h-4 px-1 rounded-full bg-amber-500 text-white text-[10px] leading-4 text-center font-semibold">${pend}</span>` : ""}</span>${l}</a>`).join("");
   return `<div class="min-h-screen"><header class="bg-white border-b sticky top-0 z-10"><div class="max-w-6xl mx-auto gutter h-14 flex items-center gap-4">
-    <b class="text-indigo-600 whitespace-nowrap">POS Super Admin</b><nav class="hidden sm:flex gap-1 flex-1">${top}</nav><span class="flex-1 sm:hidden"></span>
-    <span class="hidden md:block text-xs text-slate-500">${esc(S.email || "admin@example.com")}</span>
-    <button data-act="logout" aria-label="ထွက်မည်" class="flex items-center gap-1.5 text-sm text-slate-600 hover:text-red-600 p-2 rounded-lg hover:bg-slate-100">${ic("logout")}<span class="hidden sm:inline">ထွက်မည်</span></button></div></header>
+    <b class="text-indigo-600 whitespace-nowrap flex items-center gap-2"><span class="w-8 h-8 rounded-lg bg-indigo-600 text-white grid place-items-center">${ic("store", "w-4 h-4")}</span>POS Super Admin</b><nav class="hidden sm:flex gap-1 flex-1">${top}</nav><span class="flex-1 sm:hidden"></span>
+    <span class="hidden md:flex items-center gap-1.5 text-xs text-slate-500">${ic("user", "w-3.5 h-3.5")}${esc(S.email || "admin@example.com")}</span>
+    <button data-act="logout" aria-label="ထွက်မည်" class="wig flex items-center gap-1.5 text-sm text-slate-600 hover:text-red-600 p-2 rounded-lg hover:bg-slate-100">${ic("logout")}<span class="hidden sm:inline">ထွက်မည်</span></button></div></header>
     <main class="max-w-6xl mx-auto gutter py-4 pb-28 sm:pb-4">${body}</main>
-    <nav class="sm:hidden fixed bottom-0 inset-x-0 z-10 bg-white border-t grid grid-cols-3 pb-[env(safe-area-inset-bottom)]">${bot}</nav></div>`;
+    <nav class="sm:hidden fixed bottom-0 inset-x-0 z-10 bg-white border-t grid grid-cols-5 pb-[env(safe-area-inset-bottom)]">${bot}</nav></div>`;
 }
 
 function dashboardView() {
   const all = S.shops, pays = Object.values(S.pays).flat();
   const soon = all.filter(isSoon);
+  const onl = Object.values(S.staff).flat().filter(isOnline).length;
   const total = pays.reduce((a, p) => a + p.amount, 0);
   const month = new Date().toISOString().slice(0, 7);
   const thisMonth = pays.filter((p) => p.paid_at.startsWith(month)).reduce((a, p) => a + p.amount, 0);
   const cards = [
-    ["ဆိုင်စုစုပေါင်း", all.length, "text-slate-900", "all"], ["Approve စောင့်နေ", all.filter((s) => s.status === "pending").length, "text-amber-600", "pending"],
-    ["အသုံးပြုနေဆဲ", all.filter((s) => isLive(s) && !isExpired(s)).length, "text-emerald-600", "running"],
-    ["သက်တမ်းကုန်ခါနီး (≤၅ ရက်)", soon.length, "text-orange-600", "soon"], ["ပိတ်သိမ်း / သက်တမ်းကုန်", all.filter(isDead).length, "text-red-600", "dead"],
-    ["ကောက်ခံရရှိမှု စုစုပေါင်း", fmt(total), "text-indigo-600", "all"],
+    ["ဆိုင်စုစုပေါင်း", all.length, "text-slate-900", "all", "store", "bg-slate-100 text-slate-600"],
+    ["Approve စောင့်နေ", all.filter((s) => s.status === "pending").length, "text-amber-600", "pending", "inbox", "bg-amber-100 text-amber-600" + (all.some((s) => s.status === "pending") ? " anim-shake" : "")],
+    ["အသုံးပြုနေဆဲ", all.filter((s) => isLive(s) && !isExpired(s)).length, "text-emerald-600", "running", "check", "bg-emerald-100 text-emerald-600"],
+    ["သက်တမ်းကုန်ခါနီး (≤၅ ရက်)", soon.length, "text-orange-600", "soon", "hourglass", "bg-orange-100 text-orange-600" + (soon.length ? " anim-flip" : "")],
+    ["ပိတ်သိမ်း / သက်တမ်းကုန်", all.filter(isDead).length, "text-red-600", "dead", "ban", "bg-red-100 text-red-600"],
+    ["ကောက်ခံရရှိမှု စုစုပေါင်း", total, "text-indigo-600", "all", "wallet", "bg-indigo-100 text-indigo-600", 1],
+    ["ယခု Online (အကောင့်)", onl, "text-emerald-600", "all", "users", "bg-emerald-100 text-emerald-600", 0, 1],
   ];
-  return `<div class="space-y-6"><h1 class="text-xl font-bold">Dashboard</h1>
-  <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">${cards.map(([l, v, c, st]) => `<a href="#shops" data-act="go-status" data-v="${st}" class="bg-white rounded-xl p-4 shadow-sm hover:shadow"><p class="text-xs text-slate-500">${l}</p><p class="text-2xl font-bold mt-1 ${c}">${v}</p></a>`).join("")}</div>
-  <p class="text-sm text-slate-500">ယခုလ ရရှိငွေ - <b>${fmt(thisMonth)}</b></p>
-  <section class="bg-white rounded-xl shadow-sm p-4"><h2 class="font-semibold mb-3">သက်တမ်းကုန်ခါနီး ဆိုင်များ</h2>
-  ${soon.length ? "" : '<p class="text-sm text-slate-500">မရှိပါ</p>'}<ul class="divide-y">${[...soon].sort((a, b) => daysLeft(a.expires_at) - daysLeft(b.expires_at)).map((s) => `<li><a href="#shop-${s.id}" class="flex justify-between py-2 text-sm"><span>${esc(s.name)}</span><span class="text-orange-600 font-medium">${daysLeft(s.expires_at)} ရက်လို</span></a></li>`).join("")}</ul></section></div>`;
+  return `<div class="space-y-6"><h1 class="rise text-xl font-bold flex items-center gap-2">${ic("dashboard", "w-6 h-6 text-indigo-600")}Dashboard</h1>
+  <div class="grid grid-cols-2 lg:grid-cols-3 gap-3">${cards.map(([l, v, c, st, icn, bg, money, live], i) => `<a href="#shops" data-act="go-status" data-v="${st}" class="lift rise block bg-white rounded-xl p-4 shadow-sm" style="--i:${i + 1}"><div class="flex items-start justify-between gap-2"><p class="text-xs text-slate-500">${l}</p>${chip(icn, bg, "w-9 h-9")}</div><p class="text-2xl font-bold mt-2 ${c}" ${live ? 'data-onall="1"' : `data-n="${v}"`}${money ? ' data-m="1"' : ""}>${money ? fmt(v) : v}</p></a>`).join("")}</div>
+  <p class="rise text-sm text-slate-500 flex items-center gap-2" style="--i:7">${ic("trend", "w-4 h-4 text-emerald-600")}ယခုလ ရရှိငွေ - <b data-n="${thisMonth}" data-m="1">${fmt(thisMonth)}</b><span class="text-slate-300">·</span>${ic("database", "w-4 h-4 text-slate-400")}Data စုစုပေါင်း <b data-usetot>${totTxt()}</b></p>
+  <section class="rise bg-white rounded-xl shadow-sm p-4" style="--i:8"><h2 class="font-semibold mb-3 flex items-center gap-2">${ic("hourglass", "w-5 h-5 text-orange-500")}သက်တမ်းကုန်ခါနီး ဆိုင်များ</h2>
+  ${soon.length ? "" : `<p class="text-sm text-slate-500 flex items-center gap-2">${ic("check", "w-4 h-4 text-emerald-500")}မရှိပါ</p>`}<ul class="divide-y">${[...soon].sort((a, b) => daysLeft(a.expires_at) - daysLeft(b.expires_at)).map((s) => `<li><a href="#shop-${s.id}" class="wig flex items-center gap-3 py-2.5 text-sm hover:bg-slate-50 rounded-lg px-1"><span class="w-2 h-2 rounded-full bg-orange-500 pulse-ring shrink-0"></span><span class="flex-1 min-w-0 truncate">${esc(s.name)}</span><span class="text-orange-600 font-medium flex items-center gap-1">${ic("clock", "w-3.5 h-3.5")}${daysLeft(s.expires_at)} ရက်လို</span></a></li>`).join("")}</ul></section></div>`;
 }
 
 function shopsView() {
@@ -148,93 +459,155 @@ function shopsView() {
   const counts = Object.fromEntries(tabs.map(([k, , , f]) => [k, searched.filter(f).length]));
   const f = S.status === "running" ? (s) => isLive(s) && !isExpired(s) : (tabs.find(([k]) => k === S.status) || [])[3] || ((s) => s.status === S.status);
   const shops = searched.filter(f).sort((a, b) => b.created_at.localeCompare(a.created_at));
-  return `<div class="space-y-4"><div class="flex items-center justify-between"><h1 class="text-xl font-bold">ဆိုင်များ (${shops.length})</h1>
-  <button data-act="open-create" class="bg-indigo-600 text-white text-sm rounded-lg px-3 py-2">+ ဆိုင်အသစ်</button></div>
-  <form data-form="search" class="flex gap-2"><div class="relative flex-1">${ic("search", "w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400")}
+  return `<div class="space-y-4"><div class="rise flex items-center justify-between"><h1 class="text-xl font-bold flex items-center gap-2">${ic("store", "w-6 h-6 text-indigo-600")}ဆိုင်များ (${shops.length})</h1>
+  <button data-act="open-create" class="wig flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-lg px-3 py-2 shadow-sm">${ic("plus")}ဆိုင်အသစ်</button></div>
+  <form data-form="search" class="rise flex gap-2" style="--i:1"><div class="relative flex-1">${ic("search", "w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400")}
   <input id="q" value="${esc(S.q)}" placeholder="ဆိုင်အမည် / ပိုင်ရှင် / ဖုန်း ရှာရန်" class="w-full border rounded-lg pl-9 pr-3 py-2 bg-white"></div>
-  <button class="px-4 bg-indigo-600 text-white rounded-lg text-sm font-medium">ရှာ</button></form>
-  <div class="flex gap-2 overflow-x-auto pb-1 text-sm">${tabs.map(([k, l, i]) => { const on = S.status === k; return `<button data-act="tab" data-v="${k}" class="flex items-center gap-1.5 pl-2.5 pr-3 py-1.5 rounded-full whitespace-nowrap border font-medium transition-colors ${on ? "bg-indigo-600 text-white border-indigo-600" : "bg-white text-slate-700 hover:bg-slate-50"}">${ic(i)}${l}<span class="text-xs ${on ? "text-indigo-100" : "text-slate-400"}">${counts[k]}</span></button>`; }).join("")}</div>
-  <div class="space-y-2">${shops.map((s) => { const d = daysLeft(s.expires_at); return `<a href="#shop-${s.id}" class="block bg-white rounded-xl shadow-sm p-3 hover:shadow"><div class="flex justify-between items-start gap-2"><div class="min-w-0"><p class="font-medium">${esc(s.name)}</p><p class="text-xs text-slate-500 flex items-center gap-1 mt-0.5">${ic("phone", "w-3 h-3")}${esc(s.owner_name)} · ${esc(s.phone)}</p></div>${badge(s)}</div>
-  <p class="text-xs text-slate-500 mt-2">${fmt(s.monthly_fee)}/လ · ${s.expires_at ? `${date(s.expires_at)} (${d >= 0 ? d + " ရက်လို" : "ကုန်ပြီ"})` : "သက်တမ်းမသတ်မှတ်"}</p></a>`; }).join("")}
-  ${shops.length ? "" : '<p class="text-slate-500 text-sm py-6 text-center">မတွေ့ပါ</p>'}</div></div>`;
+  <button class="px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium">ရှာ</button></form>
+  <div class="rise flex gap-2 overflow-x-auto pb-1 text-sm" style="--i:2">${tabs.map(([k, l, i]) => { const on = S.status === k; return `<button data-act="tab" data-v="${k}" class="flex items-center gap-1.5 pl-2.5 pr-3 py-1.5 rounded-full whitespace-nowrap border font-medium ${on ? "bg-indigo-600 text-white border-indigo-600 shadow-sm" : "bg-white text-slate-700 hover:bg-slate-50"}">${ic(i)}${l}<span class="text-xs ${on ? "text-indigo-100" : "text-slate-400"}">${counts[k]}</span></button>`; }).join("")}</div>
+  <div class="space-y-2">${shops.map((s, n) => { const d = daysLeft(s.expires_at); return `<a href="#shop-${s.id}" class="lift rise block bg-white rounded-xl shadow-sm p-3" style="--i:${Math.min(n, 10) + 3}"><div class="flex gap-3 items-start">${chip("store", avatarCls(s))}<div class="flex-1 min-w-0"><div class="flex justify-between items-start gap-2"><div class="min-w-0"><p class="font-medium truncate">${esc(s.name)}</p><p class="text-xs text-slate-500 flex items-center gap-1 mt-0.5">${ic("phone", "w-3 h-3")}${esc(s.owner_name)} · ${esc(s.phone)}</p></div>${badge(s)}</div>
+  <p class="text-xs text-slate-500 mt-2 flex items-center gap-1 flex-wrap"><span data-onl="${s.id}">${onlPill(s.id)}</span>${ic("tag", "w-3 h-3")}${fmt(s.monthly_fee)}/လ <span class="text-slate-300">·</span> ${ic("cal", "w-3 h-3")}${s.expires_at ? `${date(s.expires_at)} (${d >= 0 ? d + " ရက်လို" : "ကုန်ပြီ"})` : "သက်တမ်းမသတ်မှတ်"} <span class="text-slate-300">·</span> <span class="inline-flex items-center gap-1" data-use="${s.id}">${useHtml(s.id)}</span></p>${expBar(s)}</div></div></a>`; }).join("")}
+  ${shops.length ? "" : empty("search", "မတွေ့ပါ")}</div></div>`;
 }
 
 function pendingView() {
   const list = S.shops.filter((s) => s.status === "pending");
-  return `<div class="space-y-4"><h1 class="text-xl font-bold">လျှောက်ထားမှုများ (${list.length})</h1>
-  ${list.length ? `<div class="space-y-3">${list.map((s) => `<div class="bg-white rounded-xl shadow-sm p-4"><p class="font-semibold">${esc(s.name)}</p><p class="text-sm text-slate-600">${esc(s.owner_name)} · ${esc(s.phone)}</p><p class="text-xs text-slate-400">လျှောက်ထားသည့်ရက် - ${date(s.created_at)}</p>
-  <div class="flex gap-2 mt-3"><button data-act="open-approve" data-id="${s.id}" class="flex-1 bg-emerald-600 text-white rounded-lg py-2 text-sm">Approve</button><button data-act="reject" data-id="${s.id}" class="flex-1 bg-white border border-red-300 text-red-600 rounded-lg py-2 text-sm">Reject</button></div></div>`).join("")}</div>` : '<p class="text-slate-500">စောင့်ဆိုင်းနေသော လျှောက်လွှာ မရှိပါ</p>'}</div>`;
+  return `<div class="space-y-4"><h1 class="rise text-xl font-bold flex items-center gap-2">${ic("inbox", "w-6 h-6 text-amber-500")}လျှောက်ထားမှုများ (${list.length})</h1>
+  ${list.length ? `<div class="space-y-3">${list.map((s, n) => `<div class="rise bg-white rounded-xl shadow-sm p-4" style="--i:${Math.min(n, 8) + 1}"><div class="flex gap-3">${chip("store", "bg-amber-50 text-amber-600", "w-11 h-11")}<div class="min-w-0"><p class="font-semibold">${esc(s.name)}</p><p class="text-sm text-slate-600 flex items-center gap-1">${ic("user", "w-3.5 h-3.5")}${esc(s.owner_name)} · ${ic("phone", "w-3.5 h-3.5")}${esc(s.phone)}</p><p class="text-xs text-slate-400 flex items-center gap-1 mt-0.5">${ic("cal", "w-3 h-3")}လျှောက်ထားသည့်ရက် - ${date(s.created_at)}</p></div></div>
+  <div class="flex gap-2 mt-3"><button data-act="open-approve" data-id="${s.id}" class="flex-1 flex items-center justify-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg py-2 text-sm">${ic("check")}Approve</button><button data-act="reject" data-id="${s.id}" class="flex-1 flex items-center justify-center gap-1.5 bg-white border border-red-300 hover:bg-red-50 text-red-600 rounded-lg py-2 text-sm">${ic("xc")}Reject</button></div></div>`).join("")}</div>` : empty("inbox", "စောင့်ဆိုင်းနေသော လျှောက်လွှာ မရှိပါ")}</div>`;
 }
 
 function detailView(id) {
   const s = S.shops.find((x) => x.id === id);
   if (!s) return `<p class="py-10 text-center text-slate-500">ဆိုင် မတွေ့ပါ</p>`;
-  const d = daysLeft(s.expires_at), staff = S.staff[id] || [], pays = [...(S.pays[id] || [])].sort((a, b) => b.paid_at.localeCompare(a.paid_at));
+  const d = daysLeft(s.expires_at), staff = [...(S.staff[id] || [])].sort((a, b) => (b.role === "owner") - (a.role === "owner")), pays = [...(S.pays[id] || [])].sort((a, b) => b.paid_at.localeCompare(a.paid_at));
   const act = staff.filter((m) => !m.banned).length;
   const st = S.form || { months: 1, amount: s.monthly_fee, fee: s.monthly_fee };
-  const btn = "rounded-lg py-2 text-sm";
-  return `<div class="space-y-4 max-w-xl"><a href="#shops" class="inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800">${ic("back")}ဆိုင်များ</a>
-  <div class="${cls.card}"><div class="flex justify-between gap-2"><h1 class="text-xl font-bold">${esc(s.name)}</h1>${badge(s)}</div><p class="text-sm text-slate-600 mt-1">${esc(s.owner_name)} · ${esc(s.phone)}</p>
-  <p class="text-sm mt-2">လစဉ်ကြေး - <b>${fmt(s.monthly_fee)}</b></p><p class="text-sm">သက်တမ်း - ${s.expires_at ? `<b>${date(s.expires_at)} (${d >= 0 ? d + " ရက်လို" : "ကုန်ပြီ"})</b>` : "မသတ်မှတ်"}</p></div>
+  const btn = "rounded-lg py-2 text-sm flex items-center justify-center gap-1.5";
+  return `<div class="space-y-4 max-w-xl"><a href="#shops" class="wig inline-flex items-center gap-1 text-sm text-slate-500 hover:text-slate-800">${ic("back")}ဆိုင်များ</a>
+  <div class="${cls.card} rise"><div class="flex gap-3">${chip("store", avatarCls(s), "w-12 h-12")}<div class="flex-1 min-w-0"><div class="flex justify-between gap-2"><h1 class="text-xl font-bold truncate">${esc(s.name)}</h1>${badge(s)}</div><p class="text-sm text-slate-600 mt-1 flex items-center gap-1">${ic("phone", "w-3.5 h-3.5")}${esc(s.owner_name)} · ${esc(s.phone)}</p></div></div>
+  <p class="text-sm mt-3 flex items-center gap-1.5">${ic("tag", "w-4 h-4 text-slate-400")}လစဉ်ကြေး - <b>${fmt(s.monthly_fee)}</b></p><p class="text-sm flex items-center gap-1.5">${ic("cal", "w-4 h-4 text-slate-400")}သက်တမ်း - ${s.expires_at ? `<b>${date(s.expires_at)} (${d >= 0 ? d + " ရက်လို" : "ကုန်ပြီ"})</b>` : "မသတ်မှတ်"}</p><p class="text-sm flex items-center gap-1.5">${ic("tag", "w-4 h-4 text-slate-400")}Plan - <b>${esc((S.plans || []).find((p) => String(p.id) === String(s.plan_id))?.name || "မရွေးရသေး")}</b> <span class="text-slate-300">·</span> စက် ${limOf(s)} လုံး</p><p class="text-sm flex items-center gap-1.5">${ic("database", "w-4 h-4 text-slate-400")}Server data - <b data-usev="${s.id}">${usageTxt(s.id)}</b></p>${expRing(s)}</div>
 
-  <section class="${cls.card}"><div class="flex items-center justify-between mb-3"><h2 class="font-semibold flex items-center gap-2">${ic("users", "w-5 h-5 text-slate-500")}Cashier အကောင့်များ</h2><span class="text-xs text-slate-500">သုံးနေ ${act} · ပိတ်ထား ${staff.length - act}</span></div>
-  ${staff.length ? "" : '<p class="text-sm text-slate-500">Cashier အကောင့် မရှိသေးပါ</p>'}<ul class="divide-y">${staff.map((m) => `<li class="py-3 flex items-center gap-3">
-  <span class="w-9 h-9 rounded-full grid place-items-center ${m.banned ? "bg-red-50 text-red-500" : "bg-indigo-50 text-indigo-600"}">${ic("user", "w-5 h-5")}</span>
-  <div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${esc(m.name)} <span class="ml-1 text-[11px] font-normal px-1.5 py-0.5 rounded bg-slate-100 text-slate-600">${m.role}</span></p>
+  <section class="${cls.card} rise" style="--i:1"><div class="flex items-center justify-between mb-3"><h2 class="font-semibold flex items-center gap-2">${ic("users", "w-5 h-5 text-slate-500")}အကောင့်များ <span class="text-xs font-normal text-slate-400">Owner / Cashier</span></h2><span class="text-xs text-slate-500">သုံးနေ ${act} · ပိတ်ထား ${staff.length - act} <span data-onc="${id}">${onlTxt(id)}</span></span></div>
+  ${staff.length ? "" : `<p class="text-sm text-slate-500 flex items-center gap-2">${ic("user", "w-4 h-4 text-slate-400")}အကောင့် မရှိသေးပါ</p>`}<ul class="divide-y">${staff.map((m) => `<li class="py-3 flex items-center gap-3">
+  <span class="w-9 h-9 rounded-full grid place-items-center ${m.banned ? "bg-red-50 text-red-500" : m.role === "owner" ? "bg-violet-50 text-violet-600" : "bg-indigo-50 text-indigo-600"}">${ic(m.role === "owner" ? "shield" : "user", "w-5 h-5")}</span>
+  <div class="flex-1 min-w-0"><p class="text-sm font-medium truncate">${esc(m.name)} <span class="ml-1 text-[11px] font-normal px-1.5 py-0.5 rounded ${roleCls(m.role)}">${m.role === "owner" ? "Owner" : m.role === "cashier" ? "Cashier" : esc(m.role)}</span></p>
   <p class="text-xs text-slate-500 truncate">${m.phone ? m.phone + " · " : ""}${m.last_login ? "နောက်ဆုံးဝင် " + new Date(m.last_login).toLocaleString() : "မဝင်ဖူးသေး"}</p>
-  <span class="inline-block mt-1 text-[11px] px-2 py-0.5 rounded-full font-medium ${m.banned ? "bg-red-100 text-red-800" : "bg-emerald-100 text-emerald-800"}">${m.banned ? "ပိတ်ထား" : "သုံးနေ"}</span></div>
-  <button data-act="staff" data-id="${m.id}" class="flex items-center gap-1.5 text-sm rounded-lg px-3 py-1.5 border ${m.banned ? "border-indigo-300 text-indigo-700" : "border-red-300 text-red-600"}">${ic(m.banned ? "unlock" : "lock")}${m.banned ? "ပြန်ဖွင့်" : "ပိတ်မည်"}</button></li>`).join("")}</ul></section>
+  <span class="inline-block mt-1" data-pres="${m.id}">${presHtml(m)}</span></div>
+  <button data-act="staff" data-id="${m.id}" class="flex items-center gap-1.5 text-sm rounded-lg px-3 py-1.5 border ${m.banned ? "border-indigo-300 text-indigo-700 hover:bg-indigo-50" : "border-red-300 text-red-600 hover:bg-red-50"}">${ic(m.banned ? "unlock" : "lock")}${m.banned ? "ပြန်ဖွင့်" : "ပိတ်မည်"}</button></li>`).join("")}</ul></section>
 
-  <section class="${cls.card} space-y-4"><h2 class="font-semibold">Quick Controls</h2>
-  <div class="space-y-2"><p class="text-sm text-slate-600">ကြေးကောက်ခံပြီး သက်တမ်းတိုး</p><div class="flex gap-2"><input id="months" type="number" min="1" value="${st.months}" class="w-20 border rounded-lg px-2 py-2 bg-white"><span class="self-center text-sm">လ</span><input id="amount" type="number" value="${st.amount}" class="flex-1 min-w-0 border rounded-lg px-2 py-2 bg-white"></div>
-  <button data-act="renew" class="${btn} w-full bg-emerald-600 text-white" id="renewBtn">ငွေလက်ခံ + ${st.months} လ တိုးမည်</button></div>
-  <div class="grid grid-cols-3 gap-2">${[7, 15, 30].map((n) => `<button data-act="extend" data-v="${n}" class="${btn} border">+${n} ရက် (အခမဲ့)</button>`).join("")}</div>
-  <div class="flex gap-2"><input id="fee" type="number" value="${st.fee}" class="flex-1 min-w-0 border rounded-lg px-2 py-2 bg-white"><button data-act="setfee" class="${btn} px-3 border">ကြေးနှုန်းပြောင်း</button></div>
-  ${s.status === "suspended" ? `<button data-act="reactivate" class="${btn} w-full bg-indigo-600 text-white">ပြန်ဖွင့်မည်</button>` : `<button data-act="suspend" class="${btn} w-full bg-red-600 text-white">ပိတ်သိမ်းမည်</button>`}</section>
+  <section class="${cls.card} rise" style="--i:2"><div class="flex items-center justify-between mb-2 gap-2"><h2 class="font-semibold flex items-center gap-2">${ic("phone", "w-5 h-5 text-slate-500")}Device / Session</h2>
+  <div class="flex items-center gap-1"><button data-act="lim" data-v="-1" class="w-8 h-8 rounded-lg border grid place-items-center hover:bg-slate-50" aria-label="လျှော့မည်">${ic("minus")}</button><span class="min-w-[3.6rem] text-center text-sm"><b>${limOf(s)}</b> လုံး</span><button data-act="lim" data-v="1" class="w-8 h-8 rounded-lg border grid place-items-center hover:bg-slate-50" aria-label="တိုးမည်">${ic("plus")}</button></div></div>
+  <p class="text-xs text-slate-500 mb-1" data-sesssum="${s.id}">${sessSum(s)}</p>
+  <ul class="divide-y" data-sesslist="${s.id}">${sessHtml(s)}</ul>
+  <div class="flex gap-2 mt-3"><button data-act="kickall" class="flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm border border-red-300 text-red-600 hover:bg-red-50">${ic("logout")}အားလုံး ဖြုတ်ချမည်</button>${sb ? "" : `<button data-act="sim-dev" class="flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-sm border border-dashed border-indigo-300 text-indigo-700 hover:bg-indigo-50">${ic("flask")}စက်အသစ် ဝင်လာသည်ဟု စမ်းမည်</button>`}</div>
+  <p class="text-xs text-slate-400 mt-2">ကန့်သတ်ချက်ထက် များနေရင် နောက်မှ ဝင်လာတဲ့ စက်တွေ POS မှာ "စက်အရေအတွက် ပြည့်နေပါသည်" ပြပြီး ဝင်မရပါ။ ဖြုတ်ချရင် POS မှ စက္ကန့် ၁၀ အတွင်း ထွက်သွားပါမည်။</p>${featNote("sess")}</section>
 
-  <section class="${cls.card}"><h2 class="font-semibold mb-2">ကြေးပေးသွင်းမှတ်တမ်း</h2>${pays.length ? "" : '<p class="text-sm text-slate-500">မရှိသေးပါ</p>'}
-  <ul class="divide-y text-sm">${pays.map((p) => `<li class="py-2 flex justify-between"><span>${date(p.paid_at)} · ${p.months} လ</span><b>${fmt(p.amount)}</b></li>`).join("")}</ul></section></div>`;
+  <section class="${cls.card} rise space-y-4" style="--i:3"><h2 class="font-semibold flex items-center gap-2">${ic("sliders", "w-5 h-5 text-slate-500")}Quick Controls</h2>
+  <div class="space-y-2"><p class="text-sm text-slate-600 flex items-center gap-1.5">${ic("coins", "w-4 h-4 text-emerald-600")}ကြေးကောက်ခံပြီး သက်တမ်းတိုး</p><div class="grid grid-cols-2 gap-2"><select id="plan" class="border rounded-lg px-2 py-2 bg-white text-sm min-w-0"><option value="">Plan မရွေး</option>${(S.plans || []).filter((p) => p.active !== false).map((p) => `<option value="${p.id}" ${String(s.plan_id) === String(p.id) ? "selected" : ""}>${esc(p.name)} · ${fmt(p.price)}/${p.months}လ</option>`).join("")}</select><select id="method" class="border rounded-lg px-2 py-2 bg-white text-sm min-w-0"><option>ငွေသား</option><option>KPay</option><option>Wave Pay</option><option>ဘဏ်လွှဲ</option></select></div><input id="note" placeholder="မှတ်ချက် (ရွေးချယ်ခွင့်)" class="w-full border rounded-lg px-3 py-2 bg-white text-sm">
+  <div class="flex gap-2"><input id="months" type="number" min="1" value="${st.months}" class="w-20 border rounded-lg px-2 py-2 bg-white"><span class="self-center text-sm">လ</span><input id="amount" type="number" value="${st.amount}" class="flex-1 min-w-0 border rounded-lg px-2 py-2 bg-white"></div>
+  <button data-act="renew" class="${btn} w-full bg-emerald-600 hover:bg-emerald-700 text-white" id="renewBtn">${ic("wallet")}<span id="renewTxt">ငွေလက်ခံ + ${st.months} လ တိုးမည်</span></button></div>
+  <div class="grid grid-cols-3 gap-2">${[7, 15, 30].map((n) => `<button data-act="extend" data-v="${n}" class="${btn} border hover:bg-slate-50">${ic("calplus")}+${n} ရက် (အခမဲ့)</button>`).join("")}</div>
+  <div class="flex gap-2"><input id="fee" type="number" value="${st.fee}" class="flex-1 min-w-0 border rounded-lg px-2 py-2 bg-white"><button data-act="setfee" class="${btn} px-3 border hover:bg-slate-50">${ic("tag")}ကြေးနှုန်းပြောင်း</button></div>
+  ${s.status === "suspended" ? `<button data-act="reactivate" class="${btn} w-full bg-indigo-600 hover:bg-indigo-700 text-white">${ic("play")}ပြန်ဖွင့်မည်</button>` : `<button data-act="suspend" class="${btn} w-full bg-red-600 hover:bg-red-700 text-white">${ic("power")}ပိတ်သိမ်းမည်</button>`}</section>
+
+  <section class="${cls.card} rise" style="--i:3"><h2 class="font-semibold mb-2 flex items-center gap-2">${ic("receipt", "w-5 h-5 text-slate-500")}ကြေးပေးသွင်းမှတ်တမ်း<a href="#history" data-act="hist-shop" data-id="${s.id}" class="ml-auto text-xs font-normal text-indigo-600 hover:underline">မှတ်တမ်းအားလုံး →</a></h2>${pays.length ? "" : `<p class="text-sm text-slate-500 flex items-center gap-2">${ic("receipt", "w-4 h-4 text-slate-400")}မရှိသေးပါ</p>`}
+  <ul class="divide-y text-sm">${pays.map((p) => `<li class="py-2 flex items-center gap-3">${chip("coins", "bg-emerald-50 text-emerald-600", "w-8 h-8")}<span class="flex-1 min-w-0">${date(p.paid_at)} · ${p.months} လ${p.plan_name ? " · " + esc(p.plan_name) : ""}${p.method ? " · " + esc(p.method) : ""}<span class="block text-xs text-slate-400 truncate">${ic("user", "w-3 h-3 inline mr-0.5")}${p.admin_email ? esc(p.admin_email) : "—"}${p.note ? " · " + esc(p.note) : ""}</span></span><b>${fmt(p.amount)}</b></li>`).join("")}</ul></section></div>`;
+}
+
+
+function historyView() {
+  const hf = S.hf || "all", hr = S.hr || "all", list = historyList();
+  const pays = list.filter((x) => x.kind === "pay"), total = pays.reduce((a, x) => a + (+x.amount || 0), 0);
+  const tile = (l, v, c, i) => `<div class="rise bg-white rounded-xl p-3 shadow-sm" style="--i:${i}"><p class="text-xs text-slate-500">${l}</p><p class="text-lg font-bold ${c}">${v}</p></div>`;
+  const chipB = (on, act, v, label, icn) => `<button data-act="${act}" data-v="${v}" class="flex items-center gap-1.5 pl-2.5 pr-3 py-1.5 rounded-full whitespace-nowrap border text-sm font-medium ${on ? "bg-indigo-600 text-white border-indigo-600 shadow-sm" : "bg-white text-slate-700 hover:bg-slate-50"}">${icn ? ic(icn) : ""}${label}</button>`;
+  return `<div class="space-y-4"><div class="rise flex items-center justify-between gap-2"><h1 class="text-xl font-bold flex items-center gap-2">${ic("receipt", "w-6 h-6 text-indigo-600")}မှတ်တမ်း (Audit Log)</h1>
+  <button data-act="export-csv" class="wig flex items-center gap-1.5 border bg-white hover:bg-slate-50 text-sm rounded-lg px-3 py-2">${ic("download")}CSV</button></div>
+  ${featNote("audit")}
+  <div class="grid grid-cols-3 gap-2">${tile("ကောက်ခံငွေ", fmt(total), "text-emerald-600", 1)}${tile("ကြေးသွင်းအကြိမ်", pays.length, "text-indigo-600", 2)}${tile("မှတ်တမ်း စုစုပေါင်း", list.length, "text-slate-800", 3)}</div>
+  <div class="rise flex flex-wrap gap-2 items-center" style="--i:4"><select id="hs" class="border rounded-lg px-2 py-1.5 bg-white text-sm max-w-[55%]"><option value="">ဆိုင်အားလုံး</option>${[...S.shops].sort((a, b) => a.name.localeCompare(b.name)).map((x) => `<option value="${x.id}" ${String(S.hs) === String(x.id) ? "selected" : ""}>${esc(x.name)}</option>`).join("")}</select>
+  ${[["all", "အချိန်အားလုံး"], ["month", "ဒီလ"], ["30", "ရက် ၃၀"]].map(([k, l]) => chipB(hr === k, "hr", k, l)).join("")}</div>
+  <div class="rise flex gap-2 overflow-x-auto pb-1" style="--i:5">${HF.map(([k, l, i]) => chipB(hf === k, "hf", k, l, i)).join("")}</div>
+  <ul class="space-y-2">${list.slice(0, 200).map((x, i) => { const m = AUD[x.kind] || AUD.fee; const sub = x.kind === "pay" ? `${x.months} လ${x.plan ? " · " + esc(x.plan) : ""}${x.method ? " · " + esc(x.method) : ""}${x.note ? " · " + esc(x.note) : ""}` : esc(x.detail || "");
+    return `<li class="rise bg-white rounded-xl shadow-sm p-3 flex gap-3" style="--i:${Math.min(i, 10) + 6}">${chip(m[0], m[1])}<div class="flex-1 min-w-0"><div class="flex justify-between items-start gap-2"><p class="text-sm font-medium">${m[2]}${x.shop_name ? ` · <a href="#shop-${x.shop_id}" class="text-indigo-600 hover:underline">${esc(x.shop_name)}</a>` : ""}</p>${x.kind === "pay" ? `<b class="text-emerald-600 text-sm whitespace-nowrap">${fmt(x.amount)}</b>` : ""}</div>
+    ${sub ? `<p class="text-xs text-slate-500">${sub}</p>` : ""}<p class="text-xs text-slate-400 flex items-center gap-1 flex-wrap mt-0.5">${ic("cal", "w-3 h-3")}${dt(x.t)}<span>·</span>${ic("user", "w-3 h-3")}${x.admin ? esc(x.admin) : "—"}</p></div></li>`; }).join("")}</ul>
+  ${list.length ? "" : empty("receipt", "မှတ်တမ်း မရှိသေးပါ")}</div>`;
+}
+
+function plansView() {
+  const ps = S.plans || [];
+  return `<div class="space-y-4"><div class="rise flex items-center justify-between"><h1 class="text-xl font-bold flex items-center gap-2">${ic("tag", "w-6 h-6 text-indigo-600")}Plans / Packages</h1>
+  <button data-act="open-plan" class="wig flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm rounded-lg px-3 py-2 shadow-sm">${ic("plus")}Plan အသစ်</button></div>
+  ${featNote("plans")}<p class="rise text-sm text-slate-500" style="--i:1">ဈေးနှုန်း၊ သက်တမ်းကာလ၊ ခွင့်ပြုမည့် စက်အရေအတွက်ကို package အလိုက် သတ်မှတ်ပါ။ ဆိုင်ဖွင့်ပေးချိန် / ကြေးသွင်းချိန်မှာ Plan ရွေးရုံနဲ့ ကြေး၊ ရက်၊ စက်ကန့်သတ်ချက် အလိုအလျောက် ဖြည့်ပေးပါမည်။</p>
+  <div class="grid sm:grid-cols-2 gap-3">${ps.map((p, i) => { const used = S.shops.filter((x) => String(x.plan_id) === String(p.id)).length;
+    return `<div class="lift rise bg-white rounded-2xl shadow-sm p-4 ${p.active === false ? "opacity-60" : ""}" style="--i:${i + 2}"><div class="flex items-start justify-between gap-2"><div class="flex items-center gap-2.5">${chip("tag", "bg-violet-100 text-violet-600")}<div><p class="font-semibold">${esc(p.name)}</p><p class="text-xs text-slate-500">${used} ဆိုင် သုံးနေ</p></div></div>${p.active === false ? pill("bg-slate-200 text-slate-600", "ပိတ်ထား") : pill("bg-emerald-100 text-emerald-800", "သုံးနိုင်")}</div>
+    <p class="text-2xl font-bold text-indigo-600 mt-3">${fmt(p.price)} <span class="text-sm font-normal text-slate-500">/ ${p.months} လ</span></p>
+    <div class="flex flex-wrap gap-2 mt-2 text-xs text-slate-600"><span class="inline-flex items-center gap-1 bg-slate-100 rounded-full px-2 py-1">${ic("phone", "w-3 h-3")}စက် ${p.max_devices} လုံး</span><span class="inline-flex items-center gap-1 bg-slate-100 rounded-full px-2 py-1">${ic("cal", "w-3 h-3")}${p.months * 30} ရက်</span><span class="inline-flex items-center gap-1 bg-slate-100 rounded-full px-2 py-1">${ic("coins", "w-3 h-3")}${fmt(Math.round(p.price / p.months))}/လ</span></div>
+    ${p.note ? `<p class="text-xs text-slate-500 mt-2">${esc(p.note)}</p>` : ""}
+    <div class="flex gap-2 mt-3"><button data-act="edit-plan" data-id="${p.id}" class="flex-1 flex items-center justify-center gap-1.5 border rounded-lg py-1.5 text-sm hover:bg-slate-50">${ic("edit")}ပြင်မည်</button><button data-act="toggle-plan" data-id="${p.id}" class="flex-1 flex items-center justify-center gap-1.5 border rounded-lg py-1.5 text-sm hover:bg-slate-50">${ic(p.active === false ? "play" : "power")}${p.active === false ? "ဖွင့်မည်" : "ပိတ်မည်"}</button><button data-act="del-plan" data-id="${p.id}" class="px-3 border border-red-300 text-red-600 rounded-lg hover:bg-red-50" aria-label="ဖျက်မည်">${ic("trash")}</button></div></div>`; }).join("")}</div>
+  ${ps.length ? "" : empty("tag", "Plan မရှိသေးပါ — + Plan အသစ် နှိပ်ပါ")}</div>`;
 }
 
 /* ---------- modals ---------- */
 function modalHtml() {
   const m = S.modal; if (!m) return "";
-  const wrap = (inner) => `<div data-act="close" class="fixed inset-0 bg-black/40 grid place-items-end sm:place-items-center z-20" data-backdrop><div class="bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-5 space-y-3 max-h-[90vh] overflow-y-auto pb-[max(20px,env(safe-area-inset-bottom))]">${inner}</div></div>`;
-  if (m.type === "confirm") return wrap(`<p class="font-medium whitespace-pre-line">${esc(m.text)}</p><div class="flex gap-2"><button data-act="close" class="flex-1 border rounded-lg py-2">မလုပ်တော့</button><button data-act="confirm-yes" class="flex-1 bg-red-600 text-white rounded-lg py-2">အတည်ပြုမည်</button></div>`);
+  const an = S.modalNew;
+  const wrap = (inner) => `<div data-act="close" class="${an ? "m-bd " : ""}fixed inset-0 bg-black/40 grid place-items-end sm:place-items-center z-20" data-backdrop><div class="${an ? "m-sheet " : ""}bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-5 space-y-3 max-h-[90vh] overflow-y-auto pb-[max(20px,env(safe-area-inset-bottom))]">${inner}</div></div>`;
+  const B = "flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2";
+  if (m.type === "confirm") return wrap(`<div class="flex items-start gap-3">${chip("alert", "bg-red-100 text-red-600")}<p class="font-medium whitespace-pre-line pt-1.5">${esc(m.text)}</p></div><div class="flex gap-2"><button data-act="close" class="${B} border hover:bg-slate-50">${ic("back")}မလုပ်တော့</button><button data-act="confirm-yes" class="${B} bg-red-600 hover:bg-red-700 text-white">${ic("check")}အတည်ပြုမည်</button></div>`);
   if (m.type === "approve") {
     const s = S.shops.find((x) => x.id === m.id);
-    return wrap(`<h2 class="font-bold">Approve - ${esc(s.name)}</h2>
+    return wrap(`<h2 class="font-bold flex items-center gap-2">${chip("check", "bg-emerald-100 text-emerald-600", "w-9 h-9")}Approve - ${esc(s.name)}</h2>
     <label class="block text-sm">Initial Status<select id="ap-status" class="${cls.inp}"><option value="trial" ${m.status === "trial" ? "selected" : ""}>Trial</option><option value="active" ${m.status === "active" ? "selected" : ""}>Active</option></select></label>
-    <div class="flex gap-2 text-sm"><button data-act="ap-mode" data-v="days" class="flex-1 py-1.5 rounded-lg border ${m.mode === "days" ? "bg-indigo-600 text-white" : ""}">ရက်အရေအတွက်</button><button data-act="ap-mode" data-v="date" class="flex-1 py-1.5 rounded-lg border ${m.mode === "date" ? "bg-indigo-600 text-white" : ""}">ကုန်မည့်ရက်</button></div>
-    ${m.mode === "days" ? `<div><input id="ap-days" type="number" min="1" class="w-full border rounded-lg px-3 py-2" value="${m.days}"><div class="flex gap-2 mt-2 text-xs">${[7, 14, 30, 90, 365].map((d) => `<button data-act="ap-days" data-v="${d}" class="px-2 py-1 bg-slate-100 rounded">${d}ရက်</button>`).join("")}</div></div>` : `<input id="ap-date" type="date" class="w-full border rounded-lg px-3 py-2" value="${m.date}">`}
+    <label class="block text-sm">Plan<select id="ap-plan" class="${cls.inp}"><option value="">Plan မရွေး (ကိုယ်တိုင်သတ်မှတ်)</option>${(S.plans || []).filter((p) => p.active !== false).map((p) => `<option value="${p.id}" ${String(m.plan) === String(p.id) ? "selected" : ""}>${esc(p.name)} · ${fmt(p.price)}/${p.months}လ · စက် ${p.max_devices}</option>`).join("")}</select></label>
+    <div class="flex gap-2 text-sm"><button data-act="ap-mode" data-v="days" class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg border ${m.mode === "days" ? "bg-indigo-600 text-white" : ""}">${ic("clock")}ရက်အရေအတွက်</button><button data-act="ap-mode" data-v="date" class="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg border ${m.mode === "date" ? "bg-indigo-600 text-white" : ""}">${ic("cal")}ကုန်မည့်ရက်</button></div>
+    ${m.mode === "days" ? `<div><input id="ap-days" type="number" min="1" class="w-full border rounded-lg px-3 py-2" value="${m.days}"><div class="flex gap-2 mt-2 text-xs">${[7, 14, 30, 90, 365].map((d) => `<button data-act="ap-days" data-v="${d}" class="px-2 py-1 bg-slate-100 hover:bg-indigo-100 rounded">${d}ရက်</button>`).join("")}</div></div>` : `<input id="ap-date" type="date" class="w-full border rounded-lg px-3 py-2" value="${m.date}">`}
     <label class="block text-sm">လစဉ်ကြေး (ကျပ်)<input id="ap-fee" type="number" class="${cls.inp}" value="${m.fee}"></label>
     ${m.status === "active" ? `<label class="flex items-center gap-2 text-sm"><input id="ap-paid" type="checkbox" ${m.paid ? "checked" : ""}> ပထမလစဉ်ကြေး ရရှိပြီး (မှတ်တမ်းတင်မည်)</label>` : ""}
-    <div class="flex gap-2"><button data-act="close" class="flex-1 border rounded-lg py-2">မလုပ်တော့</button><button data-act="approve" class="flex-1 bg-emerald-600 text-white rounded-lg py-2">ဖွင့်ပေးမည်</button></div>`);
+    <div class="flex gap-2"><button data-act="close" class="${B} border hover:bg-slate-50">${ic("xc")}မလုပ်တော့</button><button data-act="approve" class="${B} bg-emerald-600 hover:bg-emerald-700 text-white">${ic("check")}ဖွင့်ပေးမည်</button></div>`);
   }
-  if (m.type === "create") return `<div data-act="close" class="fixed inset-0 bg-black/40 grid place-items-end sm:place-items-center z-20" data-backdrop><form data-form="create" class="bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-5 space-y-2 max-h-[90vh] overflow-y-auto pb-[max(20px,env(safe-area-inset-bottom))]"><h2 class="font-bold">ဆိုင်အသစ် ဖန်တီးမည်</h2>
+  if (m.type === "plan") { const p = m.p || {}; return `<div data-act="close" class="${an ? "m-bd " : ""}fixed inset-0 bg-black/40 grid place-items-end sm:place-items-center z-20" data-backdrop><form data-form="plan" class="${an ? "m-sheet " : ""}bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-5 space-y-2 max-h-[90vh] overflow-y-auto pb-[max(20px,env(safe-area-inset-bottom))]"><h2 class="font-bold flex items-center gap-2">${chip("tag", "bg-violet-100 text-violet-600", "w-9 h-9")}${m.p ? "Plan ပြင်မည်" : "Plan အသစ်"}</h2>
+    <label class="block text-sm">Plan အမည်<input id="pl-name" required value="${esc(p.name || "")}" placeholder="ဥပမာ - Standard" class="${cls.inp}"></label>
+    <div class="grid grid-cols-2 gap-2"><label class="block text-sm">ဈေးနှုန်း (ကျပ်)<input id="pl-price" type="number" min="0" required value="${p.price ?? 30000}" class="${cls.inp}"></label><label class="block text-sm">သက်တမ်း (လ)<input id="pl-months" type="number" min="1" required value="${p.months ?? 1}" class="${cls.inp}"></label></div>
+    <label class="block text-sm">ခွင့်ပြုမည့် စက် (device) အရေအတွက်<input id="pl-dev" type="number" min="1" required value="${p.max_devices ?? 3}" class="${cls.inp}"></label>
+    <label class="block text-sm">မှတ်ချက်<input id="pl-note" value="${esc(p.note || "")}" class="${cls.inp}"></label>
+    <div class="flex gap-2 pt-2"><button type="button" data-act="close" class="flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 border hover:bg-slate-50">${ic("xc")}ပိတ်</button><button class="flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 bg-indigo-600 hover:bg-indigo-700 text-white">${ic("check")}သိမ်းမည်</button></div></form></div>`; }
+  if (m.type === "create") return `<div data-act="close" class="${an ? "m-bd " : ""}fixed inset-0 bg-black/40 grid place-items-end sm:place-items-center z-20" data-backdrop><form data-form="create" class="${an ? "m-sheet " : ""}bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl p-5 space-y-2 max-h-[90vh] overflow-y-auto pb-[max(20px,env(safe-area-inset-bottom))]"><h2 class="font-bold flex items-center gap-2">${chip("plus", "bg-indigo-100 text-indigo-600", "w-9 h-9")}ဆိုင်အသစ် ဖန်တီးမည်</h2>
     <label class="block text-sm">ဆိုင်အမည်<input id="c-name" required class="${cls.inp}"></label><label class="block text-sm">ပိုင်ရှင်အမည်<input id="c-owner" required class="${cls.inp}"></label>
     <label class="block text-sm">ဖုန်း<input id="c-phone" required class="${cls.inp}"></label><p class="text-xs text-slate-500 self-end pb-2">Owner ဖုန်းနံပါတ် + Password ဖြင့် POS တွင် ဝင်ရမည်</p>
     <label class="block text-sm">Password (အနည်းဆုံး ၆ လုံး)<input id="c-pw" required minlength="6" class="${cls.inp}"></label>
     <div class="grid grid-cols-3 gap-2"><label class="block text-sm">Status<select id="c-status" class="${cls.inp}"><option value="trial">Trial</option><option value="active">Active</option></select></label>
     <label class="block text-sm">ရက်<input id="c-days" type="number" min="1" value="14" class="${cls.inp}"></label><label class="block text-sm">လစဉ်ကြေး<input id="c-fee" type="number" value="30000" class="${cls.inp}"></label></div>
-    <div class="flex gap-2 pt-2"><button type="button" data-act="close" class="flex-1 border rounded-lg py-2">ပိတ်</button><button class="flex-1 bg-indigo-600 text-white rounded-lg py-2">ဖန်တီးမည်</button></div></form></div>`;
+    <div class="flex gap-2 pt-2"><button type="button" data-act="close" class="${B} border hover:bg-slate-50">${ic("xc")}ပိတ်</button><button class="${B} bg-indigo-600 hover:bg-indigo-700 text-white">${ic("plus")}ဖန်တီးမည်</button></div></form></div>`;
   return "";
 }
 
 /* ---------- render ---------- */
+function countUp() {
+  if (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  document.querySelectorAll("[data-n]").forEach((el) => {
+    const n = +el.dataset.n, m = el.dataset.m, t0 = performance.now(), D = 800;
+    const f = (t) => { const p = Math.min(1, (t - t0) / D), v = Math.round(n * (1 - Math.pow(1 - p, 3))); el.textContent = m ? fmt(v) : v; if (p < 1 && el.isConnected) requestAnimationFrame(f); };
+    requestAnimationFrame(f);
+  });
+}
 function render() {
+  const a = S.anim; S.anim = false;
   const app = document.getElementById("app");
+  app.classList.toggle("animate", !!a);
   if (!S.authed) app.innerHTML = loginView();
   else {
     const r = S.route;
-    const body = r === "dashboard" ? dashboardView() : r === "pending" ? pendingView() : r === "shops" ? shopsView() : r.startsWith("shop-") ? detailView(r.slice(5)) : dashboardView();
+    const body = r === "dashboard" ? dashboardView() : r === "pending" ? pendingView() : r === "shops" ? shopsView() : r === "history" ? historyView() : r === "plans" ? plansView() : r.startsWith("shop-") ? detailView(r.slice(5)) : dashboardView();
     app.innerHTML = shell(body);
   }
-  document.getElementById("overlay").innerHTML = modalHtml() + (S.toast ? `<div class="fixed left-1/2 -translate-x-1/2 bottom-24 sm:bottom-6 z-30 bg-slate-900 text-white text-sm rounded-lg px-4 py-2 shadow-lg">${esc(S.toast)}</div>` : "");
+  document.getElementById("overlay").innerHTML = modalHtml() + (S.toast ? `<div class="${S.toastNew ? "toast-in " : ""}fixed left-1/2 -translate-x-1/2 bottom-24 sm:bottom-6 z-30 bg-slate-900 text-white text-sm rounded-lg px-4 py-2 shadow-lg flex items-center gap-2 overflow-hidden">${ic("check", "w-4 h-4 text-emerald-400")}${esc(S.toast)}${S.toastNew ? '<i class="toast-bar"></i>' : ""}</div>` : "");
+  S.modalNew = false; S.toastNew = false;
+  if (a) countUp();
 }
 let tt;
-const toast = (t) => { S.toast = t; clearTimeout(tt); tt = setTimeout(() => { S.toast = ""; render(); }, 2200); };
-const ask = (text, fn) => { S.modal = { type: "confirm", text, fn }; render(); };
+const toast = (t) => { S.toast = t; S.toastNew = true; clearTimeout(tt); tt = setTimeout(() => { S.toast = ""; render(); }, 2200); };
+const ask = (text, fn) => { S.modal = { type: "confirm", text, fn }; S.modalNew = true; render(); };
 const phoneToEmail = (p) => { let d = String(p || "").replace(/\D/g, ""); if (/^959\d{7,9}$/.test(d)) d = "0" + d.slice(2); else if (/^9\d{7,9}$/.test(d)) d = "0" + d; return d + "@pos.shop"; };
 const notify = (t) => { toast(t); render(); };
 const shopPatch = (s) => ({ status: s.status, expires_at: s.expires_at, monthly_fee: s.monthly_fee });
@@ -243,22 +616,32 @@ async function load() {
   const err = sh.error || mem.error || pay.error;
   if (err) return notify("ဒေတာဖတ်မရပါ - " + err.message);
   S.shops = sh.data; S.staff = {}; S.pays = {};
-  mem.data.forEach((m) => (S.staff[m.shop_id] ||= []).push({ id: m.user_id, name: m.name || "-", phone: m.phone, role: m.role, banned: m.banned, last_login: m.last_login }));
+  mem.data.forEach((m) => (S.staff[m.shop_id] ||= []).push({ id: m.user_id, name: m.name || "-", phone: m.phone, role: m.role, banned: m.banned, last_login: m.last_login, last_seen: m.last_seen }));
   pay.data.forEach((p) => (S.pays[p.shop_id] ||= []).push(p));
+  const [pl, au, ss] = await Promise.all([sb.from("plans").select("*").order("price"), sb.from("audit_log").select("*").order("created_at", { ascending: false }).limit(500), sb.from("shop_sessions").select("*")]);
+  S.plans = pl.error ? [] : pl.data; S.audit = au.error ? [] : au.data; S.sess = {};
+  (ss.error ? [] : ss.data).forEach((x) => (S.sess[x.shop_id] ||= []).push(x));
+  S.featOk = { plans: !pl.error, audit: !au.error, sess: !ss.error };
+  if (!S.loaded) { S.loaded = true; S.anim = true; }
 }
 // local state ကို အရင်ပြောင်းပြီး DB မှာ သိမ်း၊ ပြီးရင် DB ကနေ ပြန်ဖတ် (မအောင်မြင်ရင် မူလအတိုင်း ပြန်ဖြစ်)
 const persist = async (fn) => {
   if (!sb) return;
-  const r = await fn();
-  if (r && r.error) notify("သိမ်းမရပါ - " + r.error.message);
-  await load(); render();
+  S.busy = 1;
+  try {
+    const r = await fn();
+    if (r && r.error) notify("သိမ်းမရပါ - " + r.error.message);
+    await load(); render();
+  } finally { S.busy = 0; }
 };
 async function signIn(email, password) {
+  stage(0);
   const { data, error } = await sb.auth.signInWithPassword({ email, password });
   if (error) { notify("ဝင်မရပါ - " + error.message); return false; }
+  stage(1);
   const { data: sa } = await sb.from("super_admins").select("user_id").eq("user_id", data.user.id).maybeSingle();
   if (!sa) { await sb.auth.signOut(); notify("Super Admin အကောင့် မဟုတ်ပါ"); return false; }
-  S.email = data.user.email; await load(); return true;
+  S.email = data.user.email; stage(2); await load(); stage(3); return true;
 }
 const $ = (id) => document.getElementById(id);
 const getShop = () => S.shops.find((x) => x.id === S.route.slice(5));
@@ -267,7 +650,7 @@ const addDays = (s, n) => { const base = s.expires_at && daysLeft(s.expires_at) 
 function route() {
   const h = location.hash.slice(1) || "dashboard";
   if (S.route !== h) { S.route = h; S.form = null; if (h === "shops" && !S.keepStatus) { /* keep filter */ } }
-  S.keepStatus = false; render(); window.scrollTo(0, 0);
+  S.keepStatus = false; S.anim = true; render(); window.scrollTo(0, 0);
 }
 window.addEventListener("hashchange", route);
 
@@ -277,7 +660,7 @@ document.addEventListener("input", (e) => {
     const months = +$("months").value || 1, fee = +$("fee").value || 0;
     if (e.target.id === "months") $("amount").value = months * s.monthly_fee;
     S.form = { months, amount: +$("amount").value, fee };
-    $("renewBtn").textContent = `ငွေလက်ခံ + ${months} လ တိုးမည်`;
+    $("renewTxt").textContent = `ငွေလက်ခံ + ${months} လ တိုးမည်`;
   }
   if (e.target.id === "amount" && S.form) S.form.amount = +e.target.value;
 });
@@ -290,25 +673,56 @@ document.addEventListener("change", (e) => {
     if ($("ap-date")) m.date = $("ap-date").value;
     m.status = e.target.value; render();
   }
+  if (e.target.id === "ap-plan" && m && m.type === "approve") {
+    const pl = (S.plans || []).find((p) => String(p.id) === e.target.value);
+    m.status = $("ap-status").value; m.plan = e.target.value; m.paid = !!$("ap-paid")?.checked;
+    if (pl) { m.mode = "days"; m.days = pl.months * 30; m.fee = Math.round(pl.price / pl.months); } else m.fee = +$("ap-fee").value || 0;
+    render();
+  }
+  if (e.target.id === "plan" && !m) {
+    const pl = (S.plans || []).find((p) => String(p.id) === e.target.value); if (!pl) return;
+    $("months").value = pl.months; $("amount").value = pl.price; S.form = { months: pl.months, amount: pl.price, fee: +$("fee").value || 0 };
+    $("renewTxt").textContent = `ငွေလက်ခံ + ${pl.months} လ တိုးမည်`;
+  }
+  if (e.target.id === "hs") { S.hs = e.target.value; S.anim = true; render(); }
 });
 
 document.addEventListener("submit", async (e) => {
   const t = e.target.dataset.form; if (!t) return;
   e.preventDefault();
   if (t === "login") {
-    if (sb && !(await signIn($("email").value.trim(), $("pw").value))) return;
-    S.authed = true; location.hash = "dashboard"; S.route = "dashboard"; render();
+    const form = e.target, pw = $("pw").value;
+    S.lastEmail = $("email").value.trim();
+    form.innerHTML = connectingHtml(); stage(0);
+    try {
+      if (sb) { if (!(await signIn(S.lastEmail, pw))) return; }
+      else for (const n of [1, 2, 3]) { await wait(600); stage(n); }
+    } catch (err) { notify("ဝင်မရပါ - " + (err.message || err)); return; }
+    await wait(550);
+    S.anim = true; S.authed = true; loadUsage(); location.hash = "dashboard"; S.route = "dashboard"; render();
   }
-  if (t === "search") { S.q = $("q").value; render(); }
+  if (t === "search") { S.q = $("q").value; S.anim = true; render(); }
+  if (t === "plan") {
+    const row = { name: $("pl-name").value.trim(), price: +$("pl-price").value || 0, months: Math.max(1, +$("pl-months").value || 1), max_devices: Math.max(1, +$("pl-dev").value || 1), note: $("pl-note").value.trim() };
+    const ed = S.modal.p; S.modal = null;
+    if (sb) {
+      const r = ed ? await sb.from("plans").update(row).eq("id", ed.id) : await sb.from("plans").insert({ ...row, active: true });
+      if (r.error) return notify("သိမ်းမရပါ - " + r.error.message);
+      await load();
+    } else if (ed) Object.assign(ed, row); else (S.plans ||= []).push({ id: "pl" + Date.now(), ...row, active: true });
+    logA(null, "plan", `Plan "${row.name}" ${ed ? "ပြင်ဆင်" : "အသစ်ထည့်"} (${fmt(row.price)} / ${row.months} လ / စက် ${row.max_devices} လုံး)`);
+    return notify("Plan သိမ်းပြီး");
+  }
   if (t === "create") {
     const days = +$("c-days").value;
     if (sb) {
       const body = { name: $("c-name").value, owner_name: $("c-owner").value, phone: $("c-phone").value, email: phoneToEmail($("c-phone").value), password: $("c-pw").value, status: $("c-status").value, days, monthly_fee: +$("c-fee").value };
       const { data, error } = await sb.functions.invoke("create-shop", { body });
       if (error || data?.error) { let msg = data?.error || error.message; try { msg = (await error.context.json()).error || msg; } catch {} return notify("မဖန်တီးနိုင်ပါ - " + msg); }
-      S.modal = null; await load(); return notify("ဆိုင်အသစ် ဖန်တီးပြီး");
+      S.modal = null; await load(); logA({ id: null, name: body.name }, "create", "ဆိုင်အသစ် ဖန်တီး (" + body.status + ")"); return notify("ဆိုင်အသစ် ဖန်တီးပြီး");
     }
     S.shops.push({ id: String(Date.now()), name: $("c-name").value, owner_name: $("c-owner").value, phone: $("c-phone").value, status: $("c-status").value, expires_at: iso(days), monthly_fee: +$("c-fee").value, created_at: iso(0) });
+    logA(S.shops[S.shops.length - 1], "create", "ဆိုင်အသစ် ဖန်တီး (" + $("c-status").value + ")");
     S.modal = null; toast("ဆိုင်အသစ် ဖန်တီးပြီး"); render();
   }
 });
@@ -320,10 +734,23 @@ document.addEventListener("click", (e) => {
   if (el.hasAttribute("data-backdrop") && e.target !== el) return;
   if (a === "close") { S.modal = null; return render(); }
   if (a === "logout") { if (sb) sb.auth.signOut(); S.authed = false; return render(); }
-  if (a === "tab") { S.status = v; return render(); }
+  if (a === "tab") { S.status = v; S.anim = true; return render(); }
   if (a === "go-status") { S.status = v; S.q = ""; return; }
-  if (a === "open-create") { S.modal = { type: "create" }; return render(); }
-  if (a === "open-approve") { S.modal = { type: "approve", id, status: "trial", mode: "days", days: 14, date: "", fee: 30000, paid: false }; return render(); }
+  if (a === "hist-shop") { S.hs = id; S.hf = "all"; return; }
+  if (a === "hf") { S.hf = v; S.anim = true; return render(); }
+  if (a === "hr") { S.hr = v; S.anim = true; return render(); }
+  if (a === "export-csv") {
+    const rows = [["ရက်စွဲ", "ဆိုင်", "လုပ်ဆောင်ချက်", "ငွေ", "လ", "Plan", "နည်းလမ်း", "Admin", "အသေးစိတ် / မှတ်ချက်"], ...historyList().map((x) => [dt(x.t), x.shop_name || "", (AUD[x.kind] || [])[2] || x.kind, x.amount ?? "", x.months ?? "", x.plan ?? "", x.method ?? "", x.admin ?? "", (x.kind === "pay" ? x.note : x.detail) ?? ""])];
+    const csv = "\ufeff" + rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
+    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" })), a2 = document.createElement("a");
+    a2.href = url; a2.download = "history.csv"; document.body.appendChild(a2); a2.click(); a2.remove(); setTimeout(() => URL.revokeObjectURL(url), 2000); return toast("CSV ထုတ်ပြီး");
+  }
+  if (a === "open-plan") { S.modal = { type: "plan", p: null }; S.modalNew = true; return render(); }
+  if (a === "edit-plan") { S.modal = { type: "plan", p: (S.plans || []).find((x) => String(x.id) === id) }; S.modalNew = true; return render(); }
+  if (a === "toggle-plan") { const p = (S.plans || []).find((x) => String(x.id) === id); p.active = p.active === false; persist(() => sb.from("plans").update({ active: p.active }).eq("id", p.id)); logA(null, "plan", `Plan "${p.name}" ${p.active ? "ပြန်ဖွင့်" : "ပိတ်"}`); toast(p.active ? "Plan ဖွင့်ပြီး" : "Plan ပိတ်ပြီး"); return render(); }
+  if (a === "del-plan") { const p = (S.plans || []).find((x) => String(x.id) === id); return ask(`Plan "${p.name}" ကို ဖျက်မည်လား?\nသုံးနေသော ဆိုင်များ၏ Plan ကို "မရွေး" ဖြစ်သွားမည်။`, () => { S.plans = S.plans.filter((x) => x !== p); S.shops.forEach((x) => { if (String(x.plan_id) === String(p.id)) x.plan_id = null; }); persist(() => sb.from("plans").delete().eq("id", p.id)); logA(null, "plan", `Plan "${p.name}" ဖျက်`); toast("Plan ဖျက်ပြီး"); }); }
+  if (a === "open-create") { S.modal = { type: "create" }; S.modalNew = true; return render(); }
+  if (a === "open-approve") { S.modalNew = true; S.modal = { type: "approve", id, status: "trial", mode: "days", days: 14, date: "", fee: 30000, paid: false }; return render(); }
   if (a === "ap-mode") { S.modal.mode = v; return render(); }
   if (a === "ap-days") { S.modal.days = +v; return render(); }
   if (a === "approve") {
@@ -331,36 +758,59 @@ document.addEventListener("click", (e) => {
     const status = $("ap-status").value, fee = +$("ap-fee").value, paid = $("ap-paid")?.checked;
     sh.status = status; sh.monthly_fee = fee;
     sh.expires_at = m.mode === "days" ? iso(+($("ap-days").value || 14)) : ($("ap-date").value ? new Date($("ap-date").value).toISOString() : iso(14));
-    if (status === "active" && paid) (S.pays[sh.id] ||= []).push({ id: "p" + Date.now(), paid_at: iso(0), months: 1, amount: fee });
-    persist(async () => { const r = await sb.from("shops").update(shopPatch(sh)).eq("id", sh.id); if (r.error || !(status === "active" && paid)) return r; return sb.from("payments").insert({ shop_id: sh.id, months: 1, amount: fee }); });
-    S.modal = null; toast(`${sh.name} ကို ဖွင့်ပေးပြီး`); return render();
+    const pl = (S.plans || []).find((p) => String(p.id) === ($("ap-plan")?.value || ""));
+    const pay = { shop_id: sh.id, months: pl ? pl.months : 1, amount: pl ? pl.price : fee, admin_email: S.email || "admin@example.com", plan_name: pl ? pl.name : null, method: "ငွေသား", note: "ပထမဆုံး ကြေး" };
+    if (pl) { sh.plan_id = pl.id; sh.max_devices = pl.max_devices; }
+    if (status === "active" && paid) (S.pays[sh.id] ||= []).push({ id: "p" + Date.now(), paid_at: iso(0), ...pay });
+    logA(sh, "approve", `Approve (${status === "active" ? "Active" : "Trial"}) · ကုန်ရက် ${date(sh.expires_at)}${pl ? " · Plan " + pl.name : ""}`);
+    persist(async () => { const r = await sb.from("shops").update(shopPatch(sh)).eq("id", sh.id); if (r.error) return r; if (pl) await sb.from("shops").update({ plan_id: pl.id, max_devices: pl.max_devices }).eq("id", sh.id); if (!(status === "active" && paid)) return r; return insertPayment(pay); });
+    S.modal = null; toast(`${sh.name} ကို ဖွင့်ပေးပြီး`); burst("ဖွင့်ပေးပြီး"); return render();
   }
-  if (a === "reject") { const sh = S.shops.find((x) => x.id === id); return ask(`${sh.name} ကို ပယ်ချမည်လား?`, () => { sh.status = "rejected"; persist(() => sb.from("shops").update(shopPatch(sh)).eq("id", sh.id)); toast("ပယ်ချပြီး"); }); }
-  if (a === "confirm-yes") { const fn = S.modal.fn; S.modal = null; fn(); return render(); }
+  if (a === "reject") { const sh = S.shops.find((x) => x.id === id); return ask(`${sh.name} ကို ပယ်ချမည်လား?`, async () => { const c = document.querySelector(`[data-act="reject"][data-id="${id}"]`)?.closest(".rise"); if (c && !calm()) { c.classList.add("leave"); await new Promise((r) => setTimeout(r, 340)); } sh.status = "rejected"; logA(sh, "reject", "လျှောက်လွှာ ပယ်ချ"); persist(() => sb.from("shops").update(shopPatch(sh)).eq("id", sh.id)); toast("ပယ်ချပြီး"); }); }
+  if (a === "confirm-yes") { const fn = S.modal.fn; S.modal = null; render(); const p = fn(); if (p && p.then) return p.then(render); return render(); }
   if (!s) return;
+  if (a === "lim") {
+    const n = Math.max(1, Math.min(50, limOf(s) + (+v))); if (n === limOf(s)) return;
+    s.max_devices = n; persist(() => sb.from("shops").update({ max_devices: n }).eq("id", s.id)); logA(s, "limit", `Device ကန့်သတ်ချက် → ${n} လုံး`); toast(`Device ကန့်သတ်ချက် ${n} လုံး`); return render();
+  }
+  if (a === "kick" || a === "unkick") {
+    const x = (S.sess[String(s.id)] || []).find((y) => String(y.id) === id); if (!x) return;
+    if (a === "unkick") { x.revoked = false; persist(() => sb.from("shop_sessions").update({ revoked: false }).eq("id", x.id)); logA(s, "kick", `${x.device_label} (${x.user_name}) ပြန်ခွင့်ပြု`); toast("ပြန်ခွင့်ပြုပြီး"); return render(); }
+    return ask(`${x.device_label || "စက်"} (${x.user_name || "-"}) ကို ဖြုတ်ချမည်လား?\nPOS မှ စက္ကန့် ၁၀ အတွင်း ထွက်သွားမည်။`, () => { x.revoked = true; persist(() => sb.from("shop_sessions").update({ revoked: true }).eq("id", x.id)); logA(s, "kick", `${x.device_label} (${x.user_name}) ကို Session ဖြုတ်ချ`); toast("ဖြုတ်ချပြီး — POS မှ စက္ကန့် ၁၀ အတွင်း ထွက်သွားမည်"); });
+  }
+  if (a === "kickall") {
+    const act = (S.sess[String(s.id)] || []).filter((x) => !x.revoked); if (!act.length) return toast("ဖြုတ်ချစရာ Session မရှိပါ");
+    return ask(`Session ${act.length} ခုလုံး ဖြုတ်ချမည်လား?\nစက်အားလုံး POS မှ ထွက်သွားမည် (ပြန်ဝင်လျှင် ပြန်ဝင်နိုင်သည်)။`, () => { act.forEach((x) => (x.revoked = true)); persist(() => sb.from("shop_sessions").update({ revoked: true }).eq("shop_id", String(s.id)).eq("revoked", false)); logA(s, "kick", `Session ${act.length} ခု အားလုံး ဖြုတ်ချ`); toast("အားလုံး ဖြုတ်ချပြီး"); });
+  }
+  if (a === "sim-dev") { (S.sess[String(s.id)] ||= []).push({ id: Date.now(), shop_id: String(s.id), user_name: "ဧည့်စက်", role: "cashier", device_label: ["iPhone", "Android Phone", "Windows PC"][Math.floor(Math.random() * 3)], first_seen: iso(0), last_seen: iso(0), revoked: false, live: true }); toast("စက်အသစ် ဝင်လာပြီ"); return render(); }
   if (a === "staff") {
     const m = S.staff[s.id].find((x) => x.id === id);
-    const flip = () => { m.banned = !m.banned; persist(() => sb.from("shop_members").update({ banned: m.banned }).eq("user_id", m.id).eq("shop_id", s.id)); toast(m.banned ? "အကောင့် ပိတ်ပြီး" : "အကောင့် ပြန်ဖွင့်ပြီး"); };
+    const flip = () => { m.banned = !m.banned; logA(s, m.banned ? "ban" : "unban", `${m.name} (${m.role}) အကောင့် ${m.banned ? "ပိတ်" : "ပြန်ဖွင့်"}`); persist(() => sb.from("shop_members").update({ banned: m.banned }).eq("user_id", m.id).eq("shop_id", s.id)); toast(m.banned ? "ပိတ်ပြီး — POS မှ စက္ကန့် ၁၀ အတွင်း ထွက်သွားမည်" : "ပြန်ဖွင့်ပြီး — POS မှ ချက်ချင်း ပြန်ဝင်နိုင်မည်"); };
     return m.banned ? (flip(), render()) : ask(`${m.name} ၏ အကောင့်ကို ပိတ်မည်လား?\nလော့ဂ်အင်ဝင်၍ မရတော့ပါ။`, flip);
   }
   if (a === "renew") {
     const months = +$("months").value || 1, amount = +$("amount").value || 0;
+    const pl = (S.plans || []).find((p) => String(p.id) === ($("plan")?.value || ""));
+    const pay = { shop_id: s.id, months, amount, admin_email: S.email || "admin@example.com", plan_name: pl ? pl.name : null, method: $("method")?.value || "", note: ($("note")?.value || "").trim() || null };
     addDays(s, months * 30); if (s.status === "pending") s.status = "active";
-    (S.pays[s.id] ||= []).push({ id: "p" + Date.now(), paid_at: iso(0), months, amount });
-    persist(async () => { const r = await sb.from("shops").update(shopPatch(s)).eq("id", s.id); return r.error ? r : sb.from("payments").insert({ shop_id: s.id, months, amount }); });
-    S.form = null; toast(`${months} လ တိုးပြီး`); return render();
+    if (pl) { s.plan_id = pl.id; s.max_devices = pl.max_devices; s.monthly_fee = Math.round(pl.price / pl.months); }
+    (S.pays[s.id] ||= []).push({ id: "p" + Date.now(), paid_at: iso(0), ...pay });
+    persist(async () => { const r = await sb.from("shops").update(shopPatch(s)).eq("id", s.id); if (r.error) return r; if (pl) await sb.from("shops").update({ plan_id: pl.id, max_devices: pl.max_devices }).eq("id", s.id); return insertPayment(pay); });
+    S.form = null; toast(`${months} လ တိုးပြီး`); burst(`${months} လ တိုးပြီး`); return render();
   }
-  if (a === "extend") { addDays(s, +v); persist(() => sb.from("shops").update(shopPatch(s)).eq("id", s.id)); toast(`+${v} ရက် တိုးပြီး`); return render(); }
-  if (a === "setfee") { s.monthly_fee = +$("fee").value || 0; persist(() => sb.from("shops").update(shopPatch(s)).eq("id", s.id)); S.form = null; toast("ကြေးနှုန်း ပြောင်းပြီး"); return render(); }
-  if (a === "suspend") return ask("ဤဆိုင်ကို ချက်ချင်း ပိတ်သိမ်းမည်လား?", () => { s.status = "suspended"; persist(() => sb.from("shops").update(shopPatch(s)).eq("id", s.id)); toast("ပိတ်သိမ်းပြီး"); });
-  if (a === "reactivate") { s.status = "active"; persist(() => sb.from("shops").update(shopPatch(s)).eq("id", s.id)); toast("ပြန်ဖွင့်ပြီး"); return render(); }
+  if (a === "extend") { addDays(s, +v); logA(s, "extend", `+${v} ရက် (အခမဲ့) → ${date(s.expires_at)}`); persist(() => sb.from("shops").update(shopPatch(s)).eq("id", s.id)); toast(`+${v} ရက် တိုးပြီး`); return render(); }
+  if (a === "setfee") { s.monthly_fee = +$("fee").value || 0; logA(s, "fee", `လစဉ်ကြေး → ${fmt(s.monthly_fee)}`); persist(() => sb.from("shops").update(shopPatch(s)).eq("id", s.id)); S.form = null; toast("ကြေးနှုန်း ပြောင်းပြီး"); return render(); }
+  if (a === "suspend") return ask("ဤဆိုင်ကို ချက်ချင်း ပိတ်သိမ်းမည်လား?", () => { s.status = "suspended"; logA(s, "suspend", "ပိတ်သိမ်း"); persist(() => sb.from("shops").update(shopPatch(s)).eq("id", s.id)); toast("ပိတ်သိမ်းပြီး — POS မှာ စက္ကန့် ၁၀ အတွင်း ပိတ်သွားမည်"); });
+  if (a === "reactivate") { s.status = "active"; logA(s, "reactivate", "ပြန်ဖွင့်"); persist(() => sb.from("shops").update(shopPatch(s)).eq("id", s.id)); toast("ပြန်ဖွင့်ပြီး — POS မှာ ချက်ချင်း ပြန်သုံးနိုင်မည်"); burst("ပြန်ဖွင့်ပြီး"); return render(); }
 });
 
+setInterval(pollPresence, 8000);
+setInterval(() => { if (S.authed) loadUsage(); }, 60000);
 route();
 if (sb) sb.auth.getSession().then(async ({ data }) => {
   const u = data.session && data.session.user; if (!u) return;
   const { data: sa } = await sb.from("super_admins").select("user_id").eq("user_id", u.id).maybeSingle();
-  if (sa) { S.email = u.email; await load(); S.authed = true; render(); }
+  if (sa) { S.email = u.email; await load(); S.authed = true; render(); loadUsage(); }
 });
 </script>
 
